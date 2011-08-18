@@ -1,15 +1,17 @@
 // ==UserScript==
-// @name FB MafiaWars Addon
-// @copyright 2010 - David Cabrera
-// @version 0.4.4.6
+// @name        FB MafiaWars Addon
 // @description Facebook MafiaWars Tools.
-// @include http://userscripts.org/scripts/source/90615.meta.js*
-// @include http://apps.facebook.com/inthemafia/*
-// @include http://facebook.mafiawars*/mwfb/remote/html_server.php*
-// @include http://www.connect.facebook.com/widgets/serverfbml.php*
-// @exclude http://facebook.mafiawars*/mwfb/*#*
-// @exclude http://facebook.mafiawars*/mwfb/remote/html_server.php?xw_controller=requests*
-// @exclude http://facebook.mafiawars*/mwfb/remote/html_server.php?xw_controller=freegifts*
+// @namespace   MafiaWars
+// @include     http://apps.facebook.com/inthemafia/*
+// @include     http://www.facebook.com/plugins/serverfbml.php*
+// @include     http://facebook.mafiawars*/mwfb/remote/html_server.php*
+// @include     http://www.connect.facebook.com/widgets/serverfbml.php*
+// @exclude     http://facebook.mafiawars*/mwfb/*#*
+// @exclude     http://facebook.mafiawars*/mwfb/remote/html_server.php?xw_controller=requests*
+// @exclude     http://facebook.mafiawars*/mwfb/remote/html_server.php?xw_controller=freegifts*
+// @version     0.4.4.9
+// @author      David Cabrera
+// @contributor PhantomDC, Lee TheManiac, Jappe, s1lv3rw0lf, smooth
 // ==/UserScript==
 
 // Launch app with currect window object
@@ -22,16 +24,15 @@
  */
 function MWAddon(unsafeWindow) {
 
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
-var scriptAppInfo = 
-{
+var scriptAppInfo = {
     appName: 'FB MafiaWars Addon',
     appTag: 'FBMafiaWarsAddon_',
-    appVer: '0.4.4.6',
+    appVer: '0.4.4.9',
     appUrl: 'http://userscripts.org/scripts/show/90615',
     appMeta: 'http://userscripts.org/scripts/source/90615.meta.js',
-    appPlugInUrl:'http://dascript.bravehost.com/MafiaWars/chrome/FBMWAddonPlugin.crx',
+    appPlugInUrl: 'http://dascript.bravehost.com/MafiaWars/chrome/FBMWAddonPlugin.crx',
     appUpdateInterval: 6
 };
 
@@ -354,14 +355,14 @@ var MafiaMemberCollection = function() {
     };
     this.add = function(data) {
         log$('MafiaMemberCollection.add: ' +data.length);
-	    for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
             try {
                 members[data[i].uid] = new MafiaMember(data[i]);
             }
             catch(err) {
                 log$('ERROR parsing:\n'+Util.toJSON(data[i]));
             }
-	    }
+        }
     }
     
     return this;
@@ -464,21 +465,21 @@ var Countdown = function( selector, callback, text ) {
      * @param {Number} delay Seconds
      */
     this.start = function(delay) {
-	    interval_id = setInterval(function() {
+        interval_id = setInterval(function() {
             var elem = e$(selector);
             if ( elem ) {
-	            delay--;
-	            elem.html(text+' '+Util.toDateString(delay*1000)).show();
+                delay--;
+                elem.html(text+' '+Util.toDateString(delay*1000)).show();
             } else {
                 clearInterval(interval_id);
                 return;
             }
-	        if (delay < 0) {
-	            clearInterval(interval_id);
-	            callback && callback();
-	        }
-	        
-	    }, 1000);
+            if (delay < 0) {
+                clearInterval(interval_id);
+                callback && callback();
+            }
+            
+        }, 1000);
     };
     /**
      * clear countdown
@@ -1018,11 +1019,11 @@ var Util = {
         var url_params = this.doRgx(rgx, url);
         
         return {
-		  scheme    : url_params.$2,
-		  authority : url_params.$4,
-		  path      : url_params.$5,
-		  query     : url_params.$7,
-		  fragment  : url_params.$9
+          scheme    : url_params.$2,
+          authority : url_params.$4,
+          path      : url_params.$5,
+          query     : url_params.$7,
+          fragment  : url_params.$9
         }
     },
     /**
@@ -1189,7 +1190,7 @@ var Util = {
             var sHtml = this.doRgx(/\$\('#popup_fodder'\).html\("(.*?)"\);\s*?MW.Popup.show/, htmlText).$1;
             if ( sHtml ) {
                 eval('sHtml = "'+sHtml+'";');
-		        return sHtml;
+                return sHtml;
             }
         }
         catch(err) {
@@ -1206,7 +1207,7 @@ var Util = {
      */
     moveArrayItem: function(the_array, index, move) {
         var to_index = index + move, item;
-		
+        
         if (index < 0 || index >= the_array.length) {
             return index;
         }
@@ -1269,12 +1270,12 @@ var MW = {
         if ( htmlText ) {
             eval( Util.substr(htmlText, 'var groups_levels', 'var friends_names') );
             return global.giftData = {
-	            'gifts_daily_left' : gifts_daily_left,
-	            'groups_levels'    : groups_levels,
-	            'item_amounts'     : item_amounts,
-	            'item_names'       : item_names,
-	            'item_imgs'        : item_imgs
-	        };
+                'gifts_daily_left' : gifts_daily_left,
+                'groups_levels'    : groups_levels,
+                'item_amounts'     : item_amounts,
+                'item_names'       : item_names,
+                'item_imgs'        : item_imgs
+            };
         }
         else {
             return global.giftData;    
@@ -1304,10 +1305,10 @@ var MW = {
                 timeout: 60000,
                 message: 'Loading friends data...',
                 success: function(htmlText) {
-	                if (MW.update(htmlText) !== true) {
-	                    showBadResponse();
-	                    return;
-	                }
+                    if (MW.update(htmlText) !== true) {
+                        showBadResponse();
+                        return;
+                    }
                     global.gift_key = Util.doRgx(/gift_key['"]\s*value=['"]([^'"]+)/, htmlText).$1;
                     callback( MW.updateGiftData(htmlText) );
                 }
@@ -1328,8 +1329,8 @@ var MW = {
             return global.inventoryData;
         }
         try {
-	        div.setAttribute('onclick', "return Item;");
-	        Item = div.onclick();
+            div.setAttribute('onclick', "return Item;");
+            Item = div.onclick();
         }
         catch(err) {
             Item = unsafeWindow.Item;
@@ -1354,28 +1355,28 @@ var MW = {
             callback(data);
         }
         else {
-	        httpAjaxRequest({
-	            url: 'remote/' + MW.getIntURL('inventory'),
+            httpAjaxRequest({
+                url: 'remote/' + MW.getIntURL('inventory'),
                 timeout: 60000,
-	            message: 'Loading inventory data...',
-	            success: function(htmlText) {
+                message: 'Loading inventory data...',
+                success: function(htmlText) {
                     if (MW.update(htmlText) !== true) {
                         showBadResponse();
                         callback();
                         return;
                     }
                     callback( MW.updateInventoryData(htmlText) );
-	            }
-	        });
+                }
+            });
         }
     },
     getSNAPIauth: function() {
         if (unsafeWindow && unsafeWindow.SNAPI) {
             return unsafeWindow.SNAPI.getAuthInformation();
         } else {
-	        var elt = document.createElement("div");
-	        elt.setAttribute("onclick", "return SNAPI.getAuthInformation();");
-	        return elt.onclick();
+            var elt = document.createElement("div");
+            elt.setAttribute("onclick", "return SNAPI.getAuthInformation();");
+            return elt.onclick();
         }
     },
     /**
@@ -1565,21 +1566,21 @@ var MW = {
             if (options.giftId) options.req_type = 'gift';
             
             switch(options.req_type) {
-            	case 'gift':
+                case 'gift':
                     sUrl = MW.getIntURL('requests', 'friend_selector') +
                         '&free_gift_id='+(options.giftId || 0) + 
                         '&free_gift_cat='+(options.giftCat || 1);
                     break;
                     
-            	case 'simple':
+                case 'simple':
                     sUrl = MW.getIntURL('requests', 'friend_selector_simple', options.city) +
                         '&req_type=' + options.req_type +
                         '&req_name='+options.req_name;
                     break;       
                            
-            	case 'safehouse':
-            	    sUrl = MW.getIntURL('safehouse', 'safehouse_request');
-            	    break;
+                case 'safehouse':
+                    sUrl = MW.getIntURL('safehouse', 'safehouse_request');
+                    break;
                     
                 case 'masteryboost':
                     sUrl = MW.getIntURL('requests', 'friend_selector') +
@@ -1588,8 +1589,8 @@ var MW = {
             }
             
             if (sUrl.length < 1) {
-            	log$('getGiftLink ERROR(options.req_type): '+Util.toJSON(options));
-            	return;
+                log$('getGiftLink ERROR(options.req_type): '+Util.toJSON(options));
+                return;
             };
             // send request
             httpAjaxRequest({
@@ -2751,12 +2752,12 @@ var domListObject = function(id, appendTo, styleCSS) {
      */
     this.addField = function(toAdd) {
         var liElt = c$('li').prependTo(ulList).css({
-		    'border': '1px solid #333',
-		    'cursor': 'pointer',
-		    'height': 25,
-		    'margin': 1,
-		    'overflow': 'hidden',
-		    'padding': 1
+            'border': '1px solid #333',
+            'cursor': 'pointer',
+            'height': 25,
+            'margin': 1,
+            'overflow': 'hidden',
+            'padding': 1
         });
         
         if (Util.isString(toAdd)) {
@@ -2919,8 +2920,8 @@ function showAskPopup(title, message, accept_callback, cancel_callback) {
 function showPublishMessage() {
     if (!global.options.get('publishPreview') === true) {
         showHelpPopup({
-            icon: 'info',
-            title: 'Post Published!',
+            icon:    'info',
+            title:   'Post Published!',
             message: 'You\'ve published to selected target.',
             autoclose: 3
         });
@@ -3182,10 +3183,10 @@ function httpAjaxRequest(options, callback)
             //log$('updateFromJSON:'+data);
             data = $.parseJSON(data);
             try {
-		        if (Util.isSet(data.user_fields)) {
+                if (Util.isSet(data.user_fields)) {
                     unsafeWindow.user_fields_update(data.user_fields);
-		            unsafeWindow.user_info_update(data.user_fields, data.user_info);
-		        }
+                    unsafeWindow.user_info_update(data.user_fields, data.user_info);
+                }
                 if (data.sk_update) {
                     unsafeWindow.SK.update();
                 }
@@ -3266,28 +3267,28 @@ function showBadResponse() {
 function showGroupSelection(defaultGroup, callback, defaultMessage) 
 {
     var Events = {
-	    select_click: function() {
-	        $(this).replaceWith(c$('p').text('Target Selected!'));
-	        setTimeout(function() {
-	            popupElt.close();
-	            callback(Util.getInputSelectedValue($('#select_fbgroups', popupElt.content)), 
-	                     $('#message_post',popupElt.content).val());
-	        }, 1000);
-	    },
+        select_click: function() {
+            $(this).replaceWith(c$('p').text('Target Selected!'));
+            setTimeout(function() {
+                popupElt.close();
+                callback(Util.getInputSelectedValue($('#select_fbgroups', popupElt.content)), 
+                         $('#message_post',popupElt.content).val());
+            }, 1000);
+        },
         refresh_click: function() {
-	        var button = $(this);
-	        if (button.attr('disabled')) {
-	            return false;
-	        }
+            var button = $(this);
+            if (button.attr('disabled')) {
+                return false;
+            }
             else {
-	            button.attr('disabled', true).css('opacity', 0.4);
+                button.attr('disabled', true).css('opacity', 0.4);
             }
             Groups.refresh(function() {
                 Groups.addToSelect('#select_fbgroups',defaultGroup);
                 button.removeAttr('disabled').css('opacity', 1);
             });
-	        return false;
-	    }
+            return false;
+        }
     };
 
     var popupElt = new domPopupObject('target_selection_popup', {
@@ -3345,9 +3346,9 @@ function getShortURL(longURL, success, error)
         var bBitLy = false;
         
         if ( global.options ) {
-	        if (global.options.get('api_bit_ly_login') && global.options.get('api_bit_ly_key')) { 
-	            bBitLy = global.options.get('usebitly');
-	        }    
+            if (global.options.get('api_bit_ly_login') && global.options.get('api_bit_ly_key')) { 
+                bBitLy = global.options.get('usebitly');
+            }    
         }
             
         // CROSS-DOMAIN TINYURL REQUEST
@@ -3391,10 +3392,10 @@ function getShortURL(longURL, success, error)
         else {
             log$('Using tinyurl api request for short link...');
             _api = {
-	            name: 'tinyurl',
-	            url: 'http://json-tinyurl.appspot.com/?callback=?',
-	            data: { url: longURL }
-	        };
+                name: 'tinyurl',
+                url: 'http://json-tinyurl.appspot.com/?callback=?',
+                data: { url: longURL }
+            };
         }
         
         // USE JSONP API
@@ -3480,7 +3481,7 @@ function getUnshortUrl(shortURL, success, error) {
         
         $.ajax({
             dataType: 'jsonp',
-            url: 'http://api.unshort.me/?t=jsonp&r=' + shortURL,
+            url: 'http://api.unshort.me/?t=jsonp&r='+shortURL,
             global: false,
             success: function(jsonData)
             {
@@ -3583,7 +3584,7 @@ var facebook = {
         data['access_token'] = this.session.access_token;
         
         $.ajax({
-            url      : 'https://api.facebook.com/method/' + method + '?callback=?',
+            url      : 'https://api.facebook.com/method/'+method+'?callback=?',
             dataType : 'jsonp',
             global   : false,
             data     : data,
@@ -3596,60 +3597,60 @@ var facebook = {
         // read_stream, publish_stream, user_groups, offline_access,
         // read_friendlists
         var sql = 'SELECT '+permissions+' FROM permissions WHERE uid=me()';
-		if (typeof callback === 'undefined') return;
-		this.restApi('fql.query', callback, this._error, {query:sql});
-		/*
+        if (typeof callback === 'undefined') return;
+        this.restApi('fql.query', callback, this._error, {query:sql});
+        /*
         MWFB.api({method:'fql.query', query:sql}, function(result) {
             log$($.toJSON(result));
             callback && callback(result ? result[0] : null);
         });
-		*/
+        */
     },
     requestPermission: function(permissions, callback, bInternal) {
         if ( bInternal === true ) {
-	        var self = this;
-	        MWFB.ui(
-	            {method:'permissions.request',perms:permissions}, 
-	            function(r) {
-	                self.session = r.session;
-	                callback && callback(r.perms == permissions);
-	            }
-	        );
+            var self = this;
+            MWFB.ui(
+                {method:'permissions.request',perms:permissions}, 
+                function(r) {
+                    self.session = r.session;
+                    callback && callback(r.perms == permissions);
+                }
+            );
             return;
         }
-		var external_url = 'http://www.facebook.com/dialog/oauth/?scope={1}'+
-		    '&client_id=10979261223&redirect_uri=http://apps.facebook.com/inthemafia/?';
-			
-		showHelpPopup({
-			icon: 'info',
-			title: 'Need permissions',
-			message: 'You need to give permissions to Mafia Wars.<br><br>'+
-				'Click "Accept" to open a new tab.<br>Click "Allow" to give the permissions.<br>'+
-				'Reload Mafia wars to make sure it take effect.',
-			buttons: [{
-			    label:'Accept',
-				addClass: 'short white',
-				onclick: function(){ unsafeWindow.open( external_url.replace('{1}',permissions) ); }
-			}, {
-			    label: 'Cancel'
-  			}]	
-		});
+        var external_url = 'http://www.facebook.com/dialog/oauth/?scope={1}'+
+            '&client_id=10979261223&redirect_uri=http://apps.facebook.com/inthemafia/?';
+            
+        showHelpPopup({
+            icon: 'info',
+            title: 'Need permissions',
+            message: 'You need to give permissions to Mafia Wars.<br><br>'+
+                'Click "Accept" to open a new tab.<br>Click "Allow" to give the permissions.<br>'+
+                'Reload Mafia wars to make sure it take effect.',
+            buttons: [{
+                label:'Accept',
+                addClass: 'short white',
+                onclick: function(){ unsafeWindow.open( external_url.replace('{1}',permissions) ); }
+            }, {
+                label: 'Cancel'
+              }]    
+        });
     },
     needAppPermission: function(perms, callback, bInternal) {
         var bNeedAsk = false;
         this.getAppPermissions(perms, function(result) {
-		    var values = (result && result[0]) ? result[0] : null;
-			
+            var values = (result && result[0]) ? result[0] : null;
+            
             if (!values) {
-	            showHelpPopup({
-	                icon: 'error',
-	                title: 'Error loading permissions',
-	                message: 'There is an unknow error getting your facebook permissions.<br>'+
+                showHelpPopup({
+                    icon: 'error',
+                    title: 'Error loading permissions',
+                    message: 'There is an unknow error getting your facebook permissions.<br>'+
                         'Close and Open your browser.<br><br>If you still getting this issue, '+
                         'clear the cookies and cache data of your browser, close it and open again.<br><br>'+
                         'If problem persist, go to Facebook privacy settings and remove all permissions for Mafia Wars, '+
                         'close the browser and try again.'
-	            });
+                });
                 return;
             }
             for (n in values) {
@@ -3666,12 +3667,12 @@ var facebook = {
             }
         });
     },    
-	
+    
     // PUBLISH METHODS
     streamPublish: function(options, callback, bSilectMode) {
-        var targetId = (options.target ? String(parseFloat(options.target)) : '');
-        var privacy = global.options.get('privacy');
-        var attachment = options.attachment || new Object();
+        var targetId    = (options.target ? String(parseFloat(options.target)) : '');
+        var privacy     = global.options.get('privacy');
+        var attachment  = options.attachment || new Object();
         var actionLinks = options.actionLinks;
         
         if (!Util.isSet(actionLinks) && (options.actionText && options.url)) {
@@ -3728,8 +3729,8 @@ var facebook = {
         this.needAppPermission('publish_stream', function(success) {
             if (success === true) {
                 facebook.restApi('notes.create',callback, facebook._error, {
-                    'title'    : title,
-                    'content'  : content
+                    'title'   : title,
+                    'content' : content
                 }); 
             }
         });
@@ -3745,22 +3746,22 @@ var facebook = {
         this.needAppPermission('publish_stream', function(success) {
             if (success === true) {
                 facebook.restApi('notes.edit', callback, error, {
-                    'note_id'  : note_id,
-                    'title'    : title,
-                    'content'  : content
+                    'note_id' : note_id,
+                    'title'   : title,
+                    'content' : content
                 }); 
             }
         });
     },
     streamAddLike: function(post_id, callback) {
         this.restApi('stream.addLike', callback, this._error, {
-            'post_id'  : post_id
+            'post_id' : post_id
         });
     },
     streamAddComment: function(post_id, comment, callback) {
         this.restApi('stream.addComment', callback, this._error, {
-            'post_id'  : post_id,
-            'comment'  : comment
+            'post_id' : post_id,
+            'comment' : comment
         });
     },
     
@@ -3805,9 +3806,9 @@ var facebook = {
             }
             facebook.restApi('groups.get', function(groups) {
                 if (groups && !groups.error_code) {
-	                for (var i = 0; i < groups.length; i++) {
-	                    list[groups[i].gid] = groups[i].name;
-	                }
+                    for (var i = 0; i < groups.length; i++) {
+                        list[groups[i].gid] = groups[i].name;
+                    }
                 }
                 callback(list);
             }, this._error);
@@ -3829,8 +3830,8 @@ var facebook = {
         sql += 'FROM stream WHERE app_id=10979261223 AND source_id in (SELECT target_id FROM connection WHERE source_id=me()) ';
         sql += 'AND created_time > '+limit_time+' order by created_time desc limit '+limit;
         this.updateSession(function() {
-		    facebook.restApi('fql.query', success_callback, error_callback, {query:sql});
-		    //MWFB.api({method:'fql.query', query:sql}, callback, facebook._error);
+            facebook.restApi('fql.query', success_callback, error_callback, {query:sql});
+            //MWFB.api({method:'fql.query', query:sql}, callback, facebook._error);
         });
     },
     
@@ -3921,17 +3922,17 @@ function Configuration() {
             'Paste here the encoded configuration:', '', 
             function(resp) {
                 try {
-	                if (index = resp.indexOf('base64,')) {
-	                    resp = global.Base64.decode(resp.substr(index + 7));
-	                }
-	                $.each($.parseJSON(resp), function(name, value) {
-	                    if (!Util.isSet(defaults[name])) {
-	                        return;   
-	                    }
-	                    var options = new Config(name, defaults[name]);
+                    if (index = resp.indexOf('base64,')) {
+                        resp = global.Base64.decode(resp.substr(index + 7));
+                    }
+                    $.each($.parseJSON(resp), function(name, value) {
+                        if (!Util.isSet(defaults[name])) {
+                            return;   
+                        }
+                        var options = new Config(name, defaults[name]);
                         options.load(function() {
-	                        options.loadConfig(value);
-	                        if (name === 'main') {
+                            options.loadConfig(value);
+                            if (name === 'main') {
                                 global.options = options;
                                 global.options.save(function() {
                                     setTimeout(Configuration, 1000);
@@ -3941,7 +3942,7 @@ function Configuration() {
                                 options.save();   
                             }
                         });
-	                });
+                    });
                 }
                 catch(err) {
                     logErr$(err);
@@ -3960,21 +3961,21 @@ function Configuration() {
         function loadSettings(name) {
             if (Util.isSet(name)) {
                 var options = new Config(name, defaults[name]);
-	            options.load(function() {
+                options.load(function() {
                     savedValues[name] = new Object();
                     $.each(options.all, function(opt, value) {
                         if (!/blackList|whiteList|excluded_thanks|excluded_gifts|todayLinks/.test(opt))
                             savedValues[name][opt] = value;
                     });
                     loadSettings(categories.shift());
-	            });
+                });
             }
             else {
-	            var sOutput = String($.toJSON(savedValues));
-	            showTextPopup(
-	                'Copy this encoded configuration to share/save:', 
-	                'data:application/json;base64,' + global.Base64.encode(sOutput)
-	            ); 
+                var sOutput = String($.toJSON(savedValues));
+                showTextPopup(
+                    'Copy this encoded configuration to share/save:', 
+                    'data:application/json;base64,' + global.Base64.encode(sOutput)
+                ); 
             }
         }
         return false;
@@ -4046,17 +4047,17 @@ function Configuration() {
     }
     // add style
     popupElt.addBase64Style(
-		'I2NvbmZpZ19wb3B1cCAuYmxhY2tfYm94IHsNCgl3aWR0aDogNDAwcHg7DQoJZm9udC13ZWlnaHQ6IGJvbGQ7IA0KCWNvbG9yOiBy'+
-		'Z2IoMjA4LCAyMDgsIDIwOCk7IA0KCWJvcmRlcjogMXB4IHNvbGlkIHJnYigxNTMsIDE1MywgMTUzKTsgDQoJYmFja2dyb3VuZC1j'+
-		'b2xvcjogYmxhY2s7IA0KCWZvbnQtc2l6ZTogMTRweDsNCn0NCiNjb25maWdfcG9wdXAgLmZyYW1lX2JveCB7DQoJYm9yZGVyOiAx'+
-		'cHggc29saWQgIzRGNEY0RjsNCgltYXJnaW4tYm90dG9tOiAyMHB4Ow0KCXBhZGRpbmc6IDEwcHg7DQoJdGV4dC1hbGlnbjogbGVm'+
-		'dDsNCn0NCiNjb25maWdfcG9wdXAgZGl2LmNoZWNrYm94IHsNCgliYWNrZ3JvdW5kOiB1cmwoImh0dHA6Ly9td2ZiLnN0YXRpYy56'+
-		'eW5nYS5jb20vbXdmYi9ncmFwaGljcy9mbGFncy9td19tZXNzYWdlYm94X2NoZWNrYm94Ml9ub3JtYWxpemVkLmdpZiIpIG5vLXJl'+
-		'cGVhdCBzY3JvbGwgMCUgMCUgdHJhbnNwYXJlbnQ7DQoJdGV4dC1hbGlnbjogbGVmdDsNCgltYXJnaW4tdG9wOiA0cHg7DQoJbWlu'+
-		'LWhlaWdodDogMjBweDsNCgl3aWR0aDogYXV0bzsgDQoJcGFkZGluZy1sZWZ0OiAzMHB4OyANCgloZWlnaHQ6IDIwcHg7DQoJY3Vy'+
-		'c29yOiBwb2ludGVyOw0KfQ0KI2NvbmZpZ19wb3B1cCBkaXYuY2hlY2tib3guY2hlY2tlZCB7DQoJYmFja2dyb3VuZDogdXJsKCJo'+
-		'dHRwOi8vbXdmYi5zdGF0aWMuenluZ2EuY29tL213ZmIvZ3JhcGhpY3MvZmxhZ3MvbXdfbWVzc2FnZWJveF9jaGVja2JveDFfbm9y'+
-		'bWFsaXplZC5naWYiKSBuby1yZXBlYXQgc2Nyb2xsIDAlIDAlIHRyYW5zcGFyZW50Ow0KfQ=='
+        'I2NvbmZpZ19wb3B1cCAuYmxhY2tfYm94IHsNCgl3aWR0aDogNDAwcHg7DQoJZm9udC13ZWlnaHQ6IGJvbGQ7IA0KCWNvbG9yOiBy'+
+        'Z2IoMjA4LCAyMDgsIDIwOCk7IA0KCWJvcmRlcjogMXB4IHNvbGlkIHJnYigxNTMsIDE1MywgMTUzKTsgDQoJYmFja2dyb3VuZC1j'+
+        'b2xvcjogYmxhY2s7IA0KCWZvbnQtc2l6ZTogMTRweDsNCn0NCiNjb25maWdfcG9wdXAgLmZyYW1lX2JveCB7DQoJYm9yZGVyOiAx'+
+        'cHggc29saWQgIzRGNEY0RjsNCgltYXJnaW4tYm90dG9tOiAyMHB4Ow0KCXBhZGRpbmc6IDEwcHg7DQoJdGV4dC1hbGlnbjogbGVm'+
+        'dDsNCn0NCiNjb25maWdfcG9wdXAgZGl2LmNoZWNrYm94IHsNCgliYWNrZ3JvdW5kOiB1cmwoImh0dHA6Ly9td2ZiLnN0YXRpYy56'+
+        'eW5nYS5jb20vbXdmYi9ncmFwaGljcy9mbGFncy9td19tZXNzYWdlYm94X2NoZWNrYm94Ml9ub3JtYWxpemVkLmdpZiIpIG5vLXJl'+
+        'cGVhdCBzY3JvbGwgMCUgMCUgdHJhbnNwYXJlbnQ7DQoJdGV4dC1hbGlnbjogbGVmdDsNCgltYXJnaW4tdG9wOiA0cHg7DQoJbWlu'+
+        'LWhlaWdodDogMjBweDsNCgl3aWR0aDogYXV0bzsgDQoJcGFkZGluZy1sZWZ0OiAzMHB4OyANCgloZWlnaHQ6IDIwcHg7DQoJY3Vy'+
+        'c29yOiBwb2ludGVyOw0KfQ0KI2NvbmZpZ19wb3B1cCBkaXYuY2hlY2tib3guY2hlY2tlZCB7DQoJYmFja2dyb3VuZDogdXJsKCJo'+
+        'dHRwOi8vbXdmYi5zdGF0aWMuenluZ2EuY29tL213ZmIvZ3JhcGhpY3MvZmxhZ3MvbXdfbWVzc2FnZWJveF9jaGVja2JveDFfbm9y'+
+        'bWFsaXplZC5naWYiKSBuby1yZXBlYXQgc2Nyb2xsIDAlIDAlIHRyYW5zcGFyZW50Ow0KfQ=='
     );
     
     function genMainDom() {
@@ -4220,18 +4221,18 @@ function modMenu()
         
         if (menu.plugins) {
             if (subMenu.length === 1) {
-		        subMenu.css('top', self.position().top);
-		        subMenu.show();
+                subMenu.css('top', self.position().top);
+                subMenu.show();
             }
             return false;
         }
         
         if (menu.timer) {
-	        var nNow  = (new Date()).getTime();
-	        var nTime = global.options.get('menu_timers')[menu.timer];
-	        if (nTime) {
-	            $(this).attr('title', 'You run '+menu.name+' '+Util.toDateString(nNow - nTime)+' ago.');
-	        }
+            var nNow  = (new Date()).getTime();
+            var nTime = global.options.get('menu_timers')[menu.timer];
+            if (nTime) {
+                $(this).attr('title', 'You run '+menu.name+' '+Util.toDateString(nNow - nTime)+' ago.');
+            }
         }
         
         subMenu.hide();
@@ -4256,41 +4257,41 @@ function modMenu()
     )).appendTo(menu_container);
     
     setTimeout(function() {
-	    // Add menu arrow
-	    c$('div', 'fbmw_menu_arrow').appendTo(menu_container)
-	    .css('background-image', 'url("' + global.resource.menu_arrow + '")')
-	    .mouseenter(function(){ $('#fbmw_menu').stop().animate({'left': '0px'}, 'normal'); });
-	    
-	    // Add menu
-	    var mainMenu = c$('div', 'id:fbmw_menu').appendTo(menu_container);
-	    
-	    mainMenu.mouseleave(function() {
-	        $('#fbmw_menu').stop().animate({'left': '-178px'}, 'normal');
-	        $('#fbmw_plugins').hide();
-	    });
-	    
-	    // Add main menu options
-	    $.each(menuOptions, function(index, menu) {
-	        var a = c$('a', 'class:button_action').appendTo(mainMenu).html(menu.name);
-	        if (menu.main) a.css('border-bottom', '1px solid white');
-	        a.click(mainMenuClick).mouseenter(menuEnter).attr('idx', index);
-	    });
-	    
-	    // Add plugins submenu options
-	    plugins.load(function() {
-	        var plugInsMenu = c$('div', 'id:fbmw_plugins,class:addon_submenu').appendTo(mainMenu)
-	        
-	        plugInsMenu.css('left', mainMenu.outerWidth());
-	        if (plugins.get('all').length < 1) {
-	            c$('a', 'class:button_action').appendTo(plugInsMenu)
-	            .text('No Plug-Ins installed.').click(PluginManager);
-	            return;
-	        }
-	        $.each(plugins.get('all'), function(index, menu) {
-	            var a = c$('a', 'class:button_action').appendTo(plugInsMenu);
-	            a.html(menu.name).click(pluginMenuClick).attr('idx', index);
-	        });
-	    });
+        // Add menu arrow
+        c$('div', 'fbmw_menu_arrow').appendTo(menu_container)
+        .css('background-image', 'url("' + global.resource.menu_arrow + '")')
+        .mouseenter(function(){ $('#fbmw_menu').stop().animate({'left': '0px'}, 'normal'); });
+        
+        // Add menu
+        var mainMenu = c$('div', 'id:fbmw_menu').appendTo(menu_container);
+        
+        mainMenu.mouseleave(function() {
+            $('#fbmw_menu').stop().animate({'left': '-178px'}, 'normal');
+            $('#fbmw_plugins').hide();
+        });
+        
+        // Add main menu options
+        $.each(menuOptions, function(index, menu) {
+            var a = c$('a', 'class:button_action').appendTo(mainMenu).html(menu.name);
+            if (menu.main) a.css('border-bottom', '1px solid white');
+            a.click(mainMenuClick).mouseenter(menuEnter).attr('idx', index);
+        });
+        
+        // Add plugins submenu options
+        plugins.load(function() {
+            var plugInsMenu = c$('div', 'id:fbmw_plugins,class:addon_submenu').appendTo(mainMenu)
+            
+            plugInsMenu.css('left', mainMenu.outerWidth());
+            if (plugins.get('all').length < 1) {
+                c$('a', 'class:button_action').appendTo(plugInsMenu)
+                .text('No Plug-Ins installed.').click(PluginManager);
+                return;
+            }
+            $.each(plugins.get('all'), function(index, menu) {
+                var a = c$('a', 'class:button_action').appendTo(plugInsMenu);
+                a.html(menu.name).click(pluginMenuClick).attr('idx', index);
+            });
+        });
     }, 2000);
 }
 
@@ -4486,7 +4487,7 @@ function PageClan() {
                     user = Util.uSplit(elem.attr('href')).user;
                     user = global.Base64.decode(user);
                     // add
-	                wl[Util.parseNum(user)] = elem.text() + ' level ' + $.trim(level);
+                    wl[Util.parseNum(user)] = elem.text() + ' level ' + $.trim(level);
                     n_added++;
                 }
                 catch(err) {
@@ -4586,8 +4587,8 @@ function PageGift()
             }
         },
         getCat: function(giftID) {
-	        var elt = document.createElement('div');
-	        elt.setAttribute('onclick', 'return allCats['+giftID+'];');
+            var elt = document.createElement('div');
+            elt.setAttribute('onclick', 'return allCats['+giftID+'];');
             try {
                 return elt.onclick();
             } 
@@ -4628,10 +4629,10 @@ function PageGift()
             var index = parseInt( $('option:selected', '#myselections').val() );
             
             if (index > -1) {
-	            $('input:checkbox[name=freegift_box_input]:checked', '#gift_container')
-	            .each(function(i, elem) { a.push(elem.value); });
-	            options.get('mySelections')[index].ids = a;
-	            options.save();
+                $('input:checkbox[name=freegift_box_input]:checked', '#gift_container')
+                .each(function(i, elem) { a.push(elem.value); });
+                options.get('mySelections')[index].ids = a;
+                options.save();
                 showHelpPopup({
                     icon: 'info',
                     title: 'Update selection',
@@ -4650,10 +4651,10 @@ function PageGift()
                 options.set('mySelections', new Array());
             }
             
-	        $('input:checkbox[name=freegift_box_input]:checked', '#gift_container')
-	        .each(function(index, elem) { a.push(elem.value); });
-	        options.get('mySelections').push({ 'name':n, 'ids':a });
-	        options.save(updateSelectCtrl);
+            $('input:checkbox[name=freegift_box_input]:checked', '#gift_container')
+            .each(function(index, elem) { a.push(elem.value); });
+            options.get('mySelections').push({ 'name':n, 'ids':a });
+            options.save(updateSelectCtrl);
             
             $('#myselections').change();
             return false;
@@ -4703,8 +4704,8 @@ function PageGift()
             return false;
         },
         shortLinks_click: function() {
-        	options.fromDomElements();
-        	options.save();
+            options.fromDomElements();
+            options.save();
             getLinks(true, showShortLinks);
             return false;
         },
@@ -4755,7 +4756,7 @@ function PageGift()
                 });
                 return false;
             }
-        	options.fromDomElements();
+            options.fromDomElements();
             showGroupSelection(options.get('defaultGroup'), function(target, msg) {
                 options.set('defaultGroup', target);
                 options.save();
@@ -4871,23 +4872,23 @@ function PageGift()
     {
         $('.freegift_grid').children().each(function(index, elem) {
             try {
-	            if (!(elem.id && e$('.freegift_box_stats', elem) !== null))
-	                return;
-	            
-	            var id = parseInt(elem.id.substring(13));
-	            if (fixedGifts[id]) {
-	                fixedGifts[id].isnew = true;
-	                return;
-	            }
-	            
-	            var tag = $('.freegift_box_tag',elem);
-	            
-	            fixedGifts[id] = {
-	                isnew : true,
-	                name  : $('.freegift_box_itemname',elem).text(),
-	                img   : $('.freegift_box_image img',elem).attr('src'),
-	                title : (tag.text() || Gift.getNameFromTag(tag.attr('class'))).toUpperCase()
-	            };
+                if (!(elem.id && e$('.freegift_box_stats', elem) !== null))
+                    return;
+                
+                var id = parseInt(elem.id.substring(13));
+                if (fixedGifts[id]) {
+                    fixedGifts[id].isnew = true;
+                    return;
+                }
+                
+                var tag = $('.freegift_box_tag',elem);
+                
+                fixedGifts[id] = {
+                    isnew : true,
+                    name  : $('.freegift_box_itemname',elem).text(),
+                    img   : $('.freegift_box_image img',elem).attr('src'),
+                    title : (tag.text() || Gift.getNameFromTag(tag.attr('class'))).toUpperCase()
+                };
             }
             catch(err) {
                 logErr$(err);
@@ -5070,49 +5071,49 @@ function PageGift()
      */
     function getPersonalLinks(callback) {
         var personalLinks = new Array();
-	    var checkedLinks = new Config('checkeduserlinks', defaults.checkeduserlinks);
-	    var shortLinks = new Config('userlinks', {
-	        profile: '',
-	        promote: '',
-	        slots: ''
-	    });
+        var checkedLinks = new Config('checkeduserlinks', defaults.checkeduserlinks);
+        var shortLinks = new Config('userlinks', {
+            profile: '',
+            promote: '',
+            slots: ''
+        });
         
         checkedLinks.load(function() {
-	        shortLinks.load(function() {
-	            global.user_links.profile.shortUrl  = shortLinks.get('profile');
-	            global.user_links.promote.shortUrl  = shortLinks.get('promote');
-	            global.user_links.slots.shortUrl    = shortLinks.get('slots');
-	            loadLinks();
-	        });
+            shortLinks.load(function() {
+                global.user_links.profile.shortUrl  = shortLinks.get('profile');
+                global.user_links.promote.shortUrl  = shortLinks.get('promote');
+                global.user_links.slots.shortUrl    = shortLinks.get('slots');
+                loadLinks();
+            });
         });
 
         function loadLinks() {
-	        var myCollection = new Collection(global.user_links);
+            var myCollection = new Collection(global.user_links);
             
-	        myCollection.onMove(function(index, key, link) {
+            myCollection.onMove(function(index, key, link) {
                 if (!checkedLinks.get(key)) {
                     myCollection.MoveNext();
                     return;
                 }
                 var tLink = options.get('todayLinks')[key];
                 
-	            function add(shortUrl) {
-	                personalLinks.push({'name':link.name,'short_url':shortUrl});
+                function add(shortUrl) {
+                    personalLinks.push({'name':link.name,'short_url':shortUrl});
                     options.get('todayLinks')[key] = shortUrl;
-	                myCollection.MoveNext();
-	            }
+                    myCollection.MoveNext();
+                }
             
-	            if (Util.isSet(tLink)) {
+                if (Util.isSet(tLink)) {
                     add(tLink);
-	            }
+                }
                 else if (link.shortUrl) {
                     add(link.shortUrl)
                 }
                 else {
-		            if (link.longUrl) {
+                    if (link.longUrl) {
                         getShortURL(link.longUrl, add,  myCollection.MoveNext);
-		            }
-	                else if (link.req_type) {
+                    }
+                    else if (link.req_type) {
                         MW.getGiftLink({
                             'message'  : 'Shorting '+link.name+' link...',
                             'req_type' : link.req_type,
@@ -5123,17 +5124,17 @@ function PageGift()
                                getShortURL(link.longUrl, add,  myCollection.MoveNext);
                             }
                         });
-	                }
+                    }
                     else {
                         myCollection.MoveNext();
                     }
                 }
-	        });
-	        
-	        myCollection.onEnd(function() {
+            });
+            
+            myCollection.onEnd(function() {
                 options.save(function() { callback(personalLinks); }); 
             });
-	        myCollection.MoveFirst();
+            myCollection.MoveFirst();
         }
     }
     /**
@@ -5181,43 +5182,43 @@ function PageGift()
             return false;
         };
         function setLinksAndShow(personalLinks) {
-	        Links.sort(Gift.sortByName);
-	        
+            Links.sort(Gift.sortByName);
+            
             if (Util.isArray(personalLinks)) {
                 groupList['PERSONAL LINKS'] = personalLinks;
             }
             
-	        $.each(Links, function(index, gift) {
-	            if (typeof(groupList[gift.title]) === 'undefined') {
-	                groupList[gift.title] = new Array();
-	            }
-	            groupList[gift.title].push(gift);
-	        });
-	        
-	        $.each(groupList, function(name, arr) {
-	        	if (!$('#giftpage_hidegroups').attr('checked')) {
-	                s_outText += ('\n'+ name + ':\n').toUpperCase();
-	                s_noteContent += '</ul><b>'+ String(name).toUpperCase() + ':</b><ul>';
-	        	}
-	            $.each(arr, function(index, gift) {
-	                s_outText += Util.formatText(gift.name) + ' => '+ gift.short_url + '\n';
-	                s_noteContent += '<li><a href="'+ gift.short_url +'">'+Util.formatText(gift.name)+'</a></li>';
-	            });
-	        });
-	
-	        var textElt = c$('textarea', 'readonly:readonly,rows:15,cols:60');
-	        textElt.appendTo(popup.content).get(0).innerHTML = s_outText;
-	        
-	        c$('center', 'id:publish,class:clearfix').css('margin-top',20).appendTo(popup.content)
-	        .append(b$('Select All', 'class:short white').click(function(){ textElt.select(); }))
-	        .append(b$('Publish New Note', 'action:new,class:medium white').css('margin-left',10).click(publishNote))
-	        .append(b$('Edit old Note', 'action:edit,class:medium white').css('margin-left',10).click(publishNote));
-	        
-	        popup.show();
+            $.each(Links, function(index, gift) {
+                if (typeof(groupList[gift.title]) === 'undefined') {
+                    groupList[gift.title] = new Array();
+                }
+                groupList[gift.title].push(gift);
+            });
+            
+            $.each(groupList, function(name, arr) {
+                if (!$('#giftpage_hidegroups').attr('checked')) {
+                    s_outText += ('\n'+ name + ':\n').toUpperCase();
+                    s_noteContent += '</ul><b>'+ String(name).toUpperCase() + ':</b><ul>';
+                }
+                $.each(arr, function(index, gift) {
+                    s_outText += Util.formatText(gift.name) + ' => '+ gift.short_url + '\n';
+                    s_noteContent += '<li><a href="'+ gift.short_url +'">'+Util.formatText(gift.name)+'</a></li>';
+                });
+            });
+    
+            var textElt = c$('textarea', 'readonly:readonly,rows:15,cols:60');
+            textElt.appendTo(popup.content).get(0).innerHTML = s_outText;
+            
+            c$('center', 'id:publish,class:clearfix').css('margin-top',20).appendTo(popup.content)
+            .append(b$('Select All', 'class:short white').click(function(){ textElt.select(); }))
+            .append(b$('Publish New Note', 'action:new,class:medium white').css('margin-left',10).click(publishNote))
+            .append(b$('Edit old Note', 'action:edit,class:medium white').css('margin-left',10).click(publishNote));
+            
+            popup.show();
         }
         
         if ($('#giftpage_perslinks').is(':checked')) {
-        	getPersonalLinks(setLinksAndShow);
+            getPersonalLinks(setLinksAndShow);
         }
         else { 
             setLinksAndShow();
@@ -5763,13 +5764,13 @@ function OperationsCenter() {
                 liteLoad: 1,
                 success: function(htmltext) {
                     if (MW.update(htmltext)) {
-	                    showHelpPopup({
-	                        icon: 'info',
-	                        title: 'Mission Started!',
-	                        message: 'The mission "'+button.mission.name+
+                        showHelpPopup({
+                            icon: 'info',
+                            title: 'Mission Started!',
+                            message: 'The mission "'+button.mission.name+
                                  '" has been started.<br>You need to refresh all '+
                                  'missions to see the changes.'
-	                    });
+                        });
                         button.remove();
                     }
                 }
@@ -5801,24 +5802,24 @@ function OperationsCenter() {
                 url: button.mission.getUrl('doTask'), 
                 success: function(msg) 
                 {
-	                try {
-	                    var data = $.parseJSON(msg.data);
-	                    if(data.do_task_status === 2) {
-	                        button.mission.mastered = data.progress;
-	                        updateMasteryBar(data, button.id, function(is_mastered) {
-	                            if (button.mission.is_mastered = is_mastered) {
-	                                $('#operations_list .task_buttons a')
-	                                .attr('disabled',true).addClass('greyButton');
-	                                loadPage(button.mission.page, button.mission.type, updateOperations);
-	                            }
-	                        });
-	                    }
-	                    updateResults(data, button.id);
-	                }
-	                catch(err) {
-	                    logErr$(err);
-	                }
-	                button.enable();
+                    try {
+                        var data = $.parseJSON(msg.data);
+                        if(data.do_task_status === 2) {
+                            button.mission.mastered = data.progress;
+                            updateMasteryBar(data, button.id, function(is_mastered) {
+                                if (button.mission.is_mastered = is_mastered) {
+                                    $('#operations_list .task_buttons a')
+                                    .attr('disabled',true).addClass('greyButton');
+                                    loadPage(button.mission.page, button.mission.type, updateOperations);
+                                }
+                            });
+                        }
+                        updateResults(data, button.id);
+                    }
+                    catch(err) {
+                        logErr$(err);
+                    }
+                    button.enable();
                 }
             });
             return false;
@@ -6199,7 +6200,7 @@ function OperationsCenter() {
             easing: 'linear',
             duration: 500,
             step: function() {
-	            var this_bar = $(this);
+                var this_bar = $(this);
                 var this_bar_text = parseInt(this.mastery_percentage) + '% Mastered!';
                 if(this.mastery_percentage > target_progress) {
                     this.mastery_percentage = target_progress;
@@ -7432,19 +7433,19 @@ function FreeGiftsCenter()
             }
             
             if ( bExclude === false ) {
-	            // build url
-	            url = 'remote/' + MW.getIntURL(cUrl.next_controller, cUrl.next_action);
-	            
-	            $.each(cPrm, function(n, p) {
-	                if (!/exclude|activehustle|gift_hack|mastery_boost/.test(n))
-	                    url += ('&' + n + '=' + p);
-	            });
-	            
+                // build url
+                url = 'remote/' + MW.getIntURL(cUrl.next_controller, cUrl.next_action);
+                
+                $.each(cPrm, function(n, p) {
+                    if (!/exclude|activehustle|gift_hack|mastery_boost/.test(n))
+                        url += ('&' + n + '=' + p);
+                });
+                
                 if ( !this.fromStream ) {
-	                // set up gift 
-	                this.url      = url + '&src=2&event_hash='+event_hash;
-	                this.user_id  = cPrm.from_user;
-	                this.gift_id  = cPrm.item_id;
+                    // set up gift 
+                    this.url      = url + '&src=2&event_hash='+event_hash;
+                    this.user_id  = cPrm.from_user;
+                    this.gift_id  = cPrm.item_id;
                 }
                 else {
                     // set up stream
@@ -7462,30 +7463,30 @@ function FreeGiftsCenter()
         this.sendBackUrl = function(request_type) {
             var sbUrl = '';
             if (request_type === SEND_FBR) {
-	            if (self.event_type===3012) 
+                if (self.event_type===3012) 
                 {
-	                sbUrl = self.url.replace('xw_action=accept_gift', 'xw_action=giftback_iframe');
+                    sbUrl = self.url.replace('xw_action=accept_gift', 'xw_action=giftback_iframe');
                     sbUrl += '&fbml_iframe=1';
-	            } 
+                } 
                 else if (self.event_type===3052)
                 {
-	                sbUrl = 'remote/' + MW.getIntURL('messageCenter','energy_request')
+                    sbUrl = 'remote/' + MW.getIntURL('messageCenter','energy_request')
                     sbUrl += '&senderId=' + self.user_id + '&fbml_iframe=1';
-	            }  
+                }  
             }
             else if (fbId) {
                 if (self.event_type===3012) 
                 {
-		            sbUrl = 'http://m.mafiawars.com/mobileweb?';
-		            sbUrl += 'xw_controller=freegifts&xw_action=zmc_giftback_mobile&iframe=1&ids='+fbId;
-		            sbUrl += '&time_id='+cPrm.time_id+'&loop='+cPrm.loop+'&gkey='+cPrm.gkey;
-		            sbUrl += '&giftback_key='+cPrm.giftback_key+'&gift_cat='+cPrm.item_cat;
-		            sbUrl += '&gift_id='+cPrm.item_id+'&mult=1';
-		        } 
+                    sbUrl = 'http://m.mafiawars.com/mobileweb?';
+                    sbUrl += 'xw_controller=freegifts&xw_action=zmc_giftback_mobile&iframe=1&ids='+fbId;
+                    sbUrl += '&time_id='+cPrm.time_id+'&loop='+cPrm.loop+'&gkey='+cPrm.gkey;
+                    sbUrl += '&giftback_key='+cPrm.giftback_key+'&gift_cat='+cPrm.item_cat;
+                    sbUrl += '&gift_id='+cPrm.item_id+'&mult=1';
+                } 
                 else if (self.event_type===3052)
                 {
-		            sbUrl += 'http://m.mafiawars.com/mobileweb?';
-		            sbUrl += 'xw_controller=messageCenter&xw_action=energy_request&iframe=1&senderId='+fbId;
+                    sbUrl += 'http://m.mafiawars.com/mobileweb?';
+                    sbUrl += 'xw_controller=messageCenter&xw_action=energy_request&iframe=1&senderId='+fbId;
                 }
             }
             return sbUrl;
@@ -7629,11 +7630,11 @@ function FreeGiftsCenter()
             $.each(gifts, function(id, links) {
                 sort_array.push(links);
             });
-	        sort_array.sort(function(a, b) {
-	            var x = a.name.toLowerCase();
-	            var y = b.name.toLowerCase();
-	            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-	        });
+            sort_array.sort(function(a, b) {
+                var x = a.name.toLowerCase();
+                var y = b.name.toLowerCase();
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
             $.each(sort_array, function(index, links) {
                 sorted_gifts[links.id] = links;
             });
@@ -7822,28 +7823,28 @@ function FreeGiftsCenter()
             }
             $(this).attr('btn', 'disabled').css('opacity', 0.4);
             if ( scan ) {
-	            options.fromDomElements();
-	            options.save(function() {
+                options.fromDomElements();
+                options.save(function() {
                     if ( id > 0 ) {
-		                scanGroup(id, enableButton);
+                        scanGroup(id, enableButton);
                     } else {
                         scanWall(enableButton);
                     }
-	            });
+                });
             }
             else {
-	            var elem = $('#massive_input', popupElt.content);
-	            var text = String(elem.val());
-	            elem.val('');
+                var elem = $('#massive_input', popupElt.content);
+                var text = String(elem.val());
+                elem.val('');
                 
-	            if (text.indexOf('http') !== -1) {
-	                options.fromDomElements();
-	                options.save(function() {
-		                parseTextLinks(text);
-		                showLinks();
+                if (text.indexOf('http') !== -1) {
+                    options.fromDomElements();
+                    options.save(function() {
+                        parseTextLinks(text);
+                        showLinks();
                         enableButton();
-	                });
-	            } else { enableButton(); }
+                    });
+                } else { enableButton(); }
             }
             return false;
         },
@@ -7926,21 +7927,21 @@ function FreeGiftsCenter()
                     nSendBack = -1;
                 }
                 
-	            c$('center').css('margin-top',10).appendTo(dBtns.empty())
-	            .append(c$('img').attr('src', global.resource.ajax_loader));
+                c$('center').css('margin-top',10).appendTo(dBtns.empty())
+                .append(c$('img').attr('src', global.resource.ajax_loader));
                 
                 collectGift(link, nSendBack, function(data) {
-	                var limitRegex = new RegExp(options.get('excludedPattern'), 'i');
-	                var image = data.image ? '<img src="'+data.image+'">' : '';
-	                
-	                if (limitRegex.test(data.message)) {
-	                    excluded.add(link.gift_id);
-	                }
-	                dBody.hide().html(image+data.message).fadeIn(1000);
-	                addFinishButtons(dBtns, id);
-	                if (data.excluded !== true && options.get('remOnSuccess')) {
-	                    Requests[id].remove();
-	                }
+                    var limitRegex = new RegExp(options.get('excludedPattern'), 'i');
+                    var image = data.image ? '<img src="'+data.image+'">' : '';
+                    
+                    if (limitRegex.test(data.message)) {
+                        excluded.add(link.gift_id);
+                    }
+                    dBody.hide().html(image+data.message).fadeIn(1000);
+                    addFinishButtons(dBtns, id);
+                    if (data.excluded !== true && options.get('remOnSuccess')) {
+                        Requests[id].remove();
+                    }
                 });
             }
             return false
@@ -8053,16 +8054,16 @@ function FreeGiftsCenter()
                     if (nSendType !== -1 && link.canSendBack===true) 
                     {
                         if (nSendType === SEND_FBR) {
-				            MW.sendRequest(link.sendBackUrl(SEND_FBR),parseFacebookSendBackResponse);
+                            MW.sendRequest(link.sendBackUrl(SEND_FBR),parseFacebookSendBackResponse);
                         }
-			            else {
-			                httpXDRequest({
-			                    method: 'GET',
-			                    header: {'Content-Type': 'text/html'},
-			                    url: link.sendBackUrl(SEND_ZMC),
-			                    onload: parseZMCSendBackResponse
-			                });
-			            } 
+                        else {
+                            httpXDRequest({
+                                method: 'GET',
+                                header: {'Content-Type': 'text/html'},
+                                url: link.sendBackUrl(SEND_ZMC),
+                                onload: parseZMCSendBackResponse
+                            });
+                        } 
                         return;
                     }
                 }
@@ -8100,11 +8101,11 @@ function FreeGiftsCenter()
                 url: url+'&gift_id='+sel, 
                 success: function(jsonData) 
                 {
-	                var elm = h$(jsonData.popup);
-	                item_image = elm.find('.mid_row .left_box .box_image:first img').attr('src');
-	                item_message = elm.find('#safehouse_request_msg strong').text();
-	                bSuccess = true;
-	                finish();
+                    var elm = h$(jsonData.popup);
+                    item_image = elm.find('.mid_row .left_box .box_image:first img').attr('src');
+                    item_message = elm.find('#safehouse_request_msg strong').text();
+                    bSuccess = true;
+                    finish();
                 }
             });
         }
@@ -8191,7 +8192,6 @@ function FreeGiftsCenter()
                outText += status.message;
             }
         });
-        
         return parseTextLinks(outText);
     }
     /**
@@ -8241,7 +8241,6 @@ function FreeGiftsCenter()
         });
         log$('parseStreams.properties.count: '+count);
         count += parseTextLinks(outText)+parseTextLinks(commentText);
-        
         return {'last_time':last_time,'count':count};
     }
     /**
@@ -8260,8 +8259,8 @@ function FreeGiftsCenter()
         elt.find('a').remove();
         
         if (stop_callback) {
-	        c$('center').css('margin-top',15).appendTo(elt)
-	        .append(b$('Stop Scan','class:medium red').click(stop_callback));
+            c$('center').css('margin-top',15).appendTo(elt)
+            .append(b$('Stop Scan','class:medium red').click(stop_callback));
         }
     }
     /**
@@ -8297,21 +8296,21 @@ function FreeGiftsCenter()
             }
             statusElt.html('<div>Posts Found: '+Util.setColor(total_posts,'green')+'</div>'
                          + '<div>Links Found: '+Util.setColor(total_links,'green')+'</div>');
-	        facebook.streamGet(function(data) {
+            facebook.streamGet(function(data) {
                 if (!data || !data.posts || data.posts.length < 1) {
                     finish();
                     return;
                 }
                 var result = parseStreams(data.posts, limit_time);
                 total_posts += data.posts.length;
-	            total_links += result.count;
+                total_links += result.count;
                 log$('result.last_time:'+result.last_time);
                 query( result.last_time );
-	        }, {
-	            'limit'      : 150, 
-	            'end_time'   : time,
-	            'source_ids' : group_id
-	        });
+            }, {
+                'limit'      : 150, 
+                'end_time'   : time,
+                'source_ids' : group_id
+            });
         }
         
         query( parseInt((new Date()).getTime()/1000) );
@@ -8349,8 +8348,8 @@ function FreeGiftsCenter()
                          + '<div>Links Found: '+Util.setColor(total_links,'green')+'</div>');
             facebook.queryHomeLinks(time, function(data) {
                 if (!data.streams || data.streams.length < 1) {
-	                finish();
-	                return;
+                    finish();
+                    return;
                 }
                 var result = parseStreams(data.streams, limit_time);                
                 total_posts += (data.status.length + data.streams.length);
@@ -8438,10 +8437,10 @@ function FreeGiftsCenter()
         var limitRegex   = new RegExp(options.get('excludedPattern'), 'i');
         var nSuccess     = 0;
         var bCancelled   = false;
-	    /** @type {Collection} */ 
-	    var c_links;
-	    /** @type {Collection} */ 
-	    var p_links;
+        /** @type {Collection} */ 
+        var c_links;
+        /** @type {Collection} */ 
+        var p_links;
         
         var c_gift = new Collection(gifts);
         
@@ -8482,18 +8481,18 @@ function FreeGiftsCenter()
             gift.total = gift.amount;
             
             p_links.onMove(function(p2, k2, link) {
-	            if (bCancelled||cancel_process) {
-	                finish();
-	                return; 
-	            }
+                if (bCancelled||cancel_process) {
+                    finish();
+                    return; 
+                }
                 sendMessage( 'link #' + (++link_count) );
-	            if (mwRegex.test(link)) {
-	                parseLink(link);
-	            }
-	            else {
-	                getUnshortUrl(link, parseLink, p_links.MoveNext);
-	            }
-	            function parseLink(longUrl) 
+                if (mwRegex.test(link)) {
+                    parseLink(link);
+                }
+                else {
+                    getUnshortUrl(link, parseLink, p_links.MoveNext);
+                }
+                function parseLink(longUrl) 
                 {
                     if (/login.php/.test(longUrl)) {
                         longUrl = unescape( Util.uSplit(longUrl).next );
@@ -8508,30 +8507,30 @@ function FreeGiftsCenter()
                         }
                     }
                     p_links.MoveNext();
-	            }
+                }
             });
             
             p_links.onEnd(function() {
                 setGiftName('Preparing to collect '+Util.setColor(gift.name, 'green')+'.');
                 sendMessage('Wait a moment please...');
                 UserCache.waitOn(function() {
-	                if (bCancelled||cancel_process) {
-	                    finish();
-	                    return; 
-	                }
+                    if (bCancelled||cancel_process) {
+                        finish();
+                        return; 
+                    }
                     collectLinks(gift, links, function() {
-	                    links = new Array();
-	                    if (gift.amount < 1 || gift.links.length < 1) {
-	                        c_gift.MoveNext();
-	                    }
-	                    else {
-	                        setGiftName('Verifying '+Util.setColor(gift.name, 'green'));
-	                        p_links.setArray(gift.links.splice(0,gift.amount));
-	                        p_links.MoveFirst();
-	                    }
-	                }); 
+                        links = new Array();
+                        if (gift.amount < 1 || gift.links.length < 1) {
+                            c_gift.MoveNext();
+                        }
+                        else {
+                            setGiftName('Verifying '+Util.setColor(gift.name, 'green'));
+                            p_links.setArray(gift.links.splice(0,gift.amount));
+                            p_links.MoveFirst();
+                        }
+                    }); 
                 });
-	        });
+            });
             
             p_links.MoveFirst();
             
@@ -8551,58 +8550,58 @@ function FreeGiftsCenter()
                     callback();
                     return; 
                 }
-	            try {
-	                if (link === null || !Util.isSet(link.user_id) || link.user_id === -1) {
-	                    c_links.MoveNext();
-	                    return;
-	                }
+                try {
+                    if (link === null || !Util.isSet(link.user_id) || link.user_id === -1) {
+                        c_links.MoveNext();
+                        return;
+                    }
                     if (verifyUser(link.user_id) !== true) {
                         c_links.MoveNext();
                         return;
                     }
                     if ( !(user = MyMafiaMembers.get(link.user_id)) ) {
                         user = {
-	                        'profile': MW.getProfileLink(link.user_id),
-	                        'first_name': link.user_id
-	                    }
+                            'profile': MW.getProfileLink(link.user_id),
+                            'first_name': link.user_id
+                        }
                     }
-	                if(options.get('ignoreLimits') !== true && excluded.is(link.gift_id)) {
-	                    addMessageLog('Skipped. You\'ve reached the limits for '+gift.name+'.');
-	                    callback();
-	                    return;
-	                }
-	                if (acceptedFrom[link.user_id] === true && link.onlyOnePerDay === true) {
+                    if(options.get('ignoreLimits') !== true && excluded.is(link.gift_id)) {
+                        addMessageLog('Skipped. You\'ve reached the limits for '+gift.name+'.');
+                        callback();
+                        return;
+                    }
+                    if (acceptedFrom[link.user_id] === true && link.onlyOnePerDay === true) {
                         c_links.MoveNext();
-	                    return;
-	                }
-	                sendMessage('from '+(user ? user.first_name : link.user_id));
-	                
-	                collectGift(link, nSendBack, function(data) {
-	                    if (data.success) {
-	                        nSuccess++;
-	                        if (!/has expired/.test(data.message)) {
-	                            gift.amount--;
-	                        }
-	                        addCollectLog(gift, user, data);
-	                    }
-	                    else {
-	                        addMessageLog(data.message, 'error', user);
-	                    }
-	                    if (options.get('skipSameUser') && link.onlyOnePerDay === true) { 
-	                        acceptedFrom[link.user_id] = true;
-	                    }
-	                    if (limitRegex.test(data.message) && !excluded.is(link.gift_id)) {
-	                        excluded.add(link.gift_id);
-	                        addMessageLog('Limit reached. "'+gift.name+'" added to exclude list.');
-	                    }
-	                    c_links.MoveNext();
-	                });
-	            }
-	            catch(err) {
-	                logErr$(err);
-	                c_links.MoveNext();
-	            }
-	        });
+                        return;
+                    }
+                    sendMessage('from '+(user ? user.first_name : link.user_id));
+                    
+                    collectGift(link, nSendBack, function(data) {
+                        if (data.success) {
+                            nSuccess++;
+                            if (!/has expired/.test(data.message)) {
+                                gift.amount--;
+                            }
+                            addCollectLog(gift, user, data);
+                        }
+                        else {
+                            addMessageLog(data.message, 'error', user);
+                        }
+                        if (options.get('skipSameUser') && link.onlyOnePerDay === true) { 
+                            acceptedFrom[link.user_id] = true;
+                        }
+                        if (limitRegex.test(data.message) && !excluded.is(link.gift_id)) {
+                            excluded.add(link.gift_id);
+                            addMessageLog('Limit reached. "'+gift.name+'" added to exclude list.');
+                        }
+                        c_links.MoveNext();
+                    });
+                }
+                catch(err) {
+                    logErr$(err);
+                    c_links.MoveNext();
+                }
+            });
             
             c_links.MoveFirst();
             
@@ -8785,9 +8784,9 @@ function FreeGiftsCenter()
         .append(c$('input:text','id:freegifts_scantime,class:black_box').width(40).val(1))
         .append(c$('span').css('margin-left',5).text('hour/s old posts.'))
         .append(c$('div', 'class:howto,id:scan_status').hide().append(c$('div').css('margin-left',15)
-	        .html('<img style="vertical-align: middle;" src="' + global.resource.ajax_loader + '">')
-	        .append(c$('span').css('margin-left',5).text('Scanning..., it may take a while.'))
-	        .append(c$('div', 'id:scan_message').css('margin-top',10))
+            .html('<img style="vertical-align: middle;" src="' + global.resource.ajax_loader + '">')
+            .append(c$('span').css('margin-left',5).text('Scanning..., it may take a while.'))
+            .append(c$('div', 'id:scan_message').css('margin-top',10))
         ))
         .append(c$('div', 'class:howto')
             .append(c$('img').attr('src', global.resource.info_icon))
@@ -8826,8 +8825,8 @@ function FreeGiftsCenter()
         
         c$('div','log_mass').appendTo(massBody)
         .append(c$('div','class:frame_box,id:massive_controls')
-	        .append(c$('span', 'id:gift_name_text'))
-	        .append(c$('span', 'id:message_text').css('margin-left', 5))
+            .append(c$('span', 'id:gift_name_text'))
+            .append(c$('span', 'id:message_text').css('margin-left', 5))
         )
         .append(c$('ul','messages_log').height(250))
         .append(c$('ul','collecting_log').height(300));
@@ -9110,12 +9109,12 @@ function HomeFeedCenter()
         var isValid = true;
         
         try {
-	        if (!feed.attachment.href) {
-	            feed.attachment.href = feed.attachment.media[0].href;
-	        }
-	        if (!feed.attachment.href) {
-	            throw Error('Invalid href');
-	        }
+            if (!feed.attachment.href) {
+                feed.attachment.href = feed.attachment.media[0].href;
+            }
+            if (!feed.attachment.href) {
+                throw Error('Invalid href');
+            }
             url_params     = Util.uSplit(feed.attachment.href);
             stream_id      = url_params.next_controller + '_' + url_params.next_action;
             stream_action  = Actions.get(stream_id);
@@ -9472,9 +9471,9 @@ function HomeFeedCenter()
             }
         }
         if ( String(params.next_params).charAt(0) === '{' ) {
-	        $.each(Util.parseParam(params.next_params), function(n, v) {
-	            sOutUrl += ('&' + n + '=' + v);
-	        });
+            $.each(Util.parseParam(params.next_params), function(n, v) {
+                sOutUrl += ('&' + n + '=' + v);
+            });
         }
         if ( String(params.value).charAt(0) === '{' ) {
             $.each(Util.parseParam(params.value), function(n, v) {
@@ -9545,7 +9544,7 @@ function HomeFeedCenter()
      * @return {Number}
      */
     function getRefreshDelay() {
-		var refreshDelay = parseInt(options.get('refreshDelay'));
+        var refreshDelay = parseInt(options.get('refreshDelay'));
         if ( refreshDelay < 2 ) { 
             refreshDelay = 2;
         }
@@ -9977,32 +9976,32 @@ function HomeFeedCenter()
                 return;
             }
             try {
-	            // filter
-	            if (Util.isFunc(cStream.filter)) {
-	                if (cStream.filter(cStream.feed.attachment.name) !== false) {
-	                    addHelpLog(cStream, 'This has been filtered.');
-	                    nSkipped++;
-	                    toNextStream();
-	                    return;
-	                }
-	            }
-	            // skip if stream isn't enabled.
-	            if (Util.isSet(options.get(cStream.groupName+'Cfg'))) {
-	                if (options.get(cStream.groupName+'Cfg')[cStream.id] === false) {
-	                    nSkipped++;
-	                    toNextStream();
-	                    return;
-	                }
-	            }
-	            // skip if this stream can't be collected today
-	            if (skippedHelps[cStream.id]) {
-	                log$('Help Skipped: '+cStream.id+'\n['+cStream.feed.permalink+'].');
-	                nSkipped++;
+                // filter
+                if (Util.isFunc(cStream.filter)) {
+                    if (cStream.filter(cStream.feed.attachment.name) !== false) {
+                        addHelpLog(cStream, 'This has been filtered.');
+                        nSkipped++;
+                        toNextStream();
+                        return;
+                    }
+                }
+                // skip if stream isn't enabled.
+                if (Util.isSet(options.get(cStream.groupName+'Cfg'))) {
+                    if (options.get(cStream.groupName+'Cfg')[cStream.id] === false) {
+                        nSkipped++;
+                        toNextStream();
+                        return;
+                    }
+                }
+                // skip if this stream can't be collected today
+                if (skippedHelps[cStream.id]) {
+                    log$('Help Skipped: '+cStream.id+'\n['+cStream.feed.permalink+'].');
+                    nSkipped++;
                     toNextStream();
-	                return;
-	            }
-	            // skip if stream group isn't enabled.
-	            if (!options.get(cStream.groupName)) {
+                    return;
+                }
+                // skip if stream group isn't enabled.
+                if (!options.get(cStream.groupName)) {
                     nSkipped++;
                     toNextStream();
                     return;
@@ -10392,8 +10391,8 @@ function HomeFeedCenter()
                 showErrorPopup();
                 return;
             }
-	        // add all pre-configured actions
-	        addDefaultActions();
+            // add all pre-configured actions
+            addDefaultActions();
             
             log$('HFC: fs.length = '+ Util.length(fs));
             feedStream = new CSStreamCollection(fs);
@@ -10689,9 +10688,9 @@ function CollectAllCities() {
                 success: function(jsonData) 
                 {
                     try {
-	                    var data = $.parseJSON(jsonData.data);
-	                    $('#collect_from_' + city).html(data.description||data.success_message);
-	                    depositAll(city, data.cash);
+                        var data = $.parseJSON(jsonData.data);
+                        $('#collect_from_' + city).html(data.description||data.success_message);
+                        depositAll(city, data.cash);
                     }
                     catch(err) {
                         logErr$(err);
@@ -10783,8 +10782,8 @@ function UserLinks()
         resetAll_click: function() {
             $.each(global.user_links, function(index, link) {
                 if (!link.locked) {
-	                delete link['longUrl'];
-	                delete link['shortUrl'];
+                    delete link['longUrl'];
+                    delete link['shortUrl'];
                 }
             });
             shortLinks = new Config('userlinks', {});
@@ -10908,65 +10907,65 @@ function UserLinks()
     }
     
     function setLink(id, name, shortUrl) {
-    	$('#'+id+'_link').val(name + ' => ' + shortUrl);
-    	if (Util.isSet(shortLinks.get(id))) {
-    		shortLinks.set(id, shortUrl);
-    	}
+        $('#'+id+'_link').val(name + ' => ' + shortUrl);
+        if (Util.isSet(shortLinks.get(id))) {
+            shortLinks.set(id, shortUrl);
+        }
     }
     
     function genMainDom() {
-    	$.each(global.user_links, function( id, link ) {
-	        var elem = c$('dl', 'class:frame_box').appendTo(popupElt.content);
+        $.each(global.user_links, function( id, link ) {
+            var elem = c$('dl', 'class:frame_box').appendTo(popupElt.content);
             
-	        c$('dt').appendTo(elem)
+            c$('dt').appendTo(elem)
             .append(c$('input:checkbox', 'id:checkeduserlinks_'+id))
             .append(c$('label','for:checkeduserlinks_'+id).text(link.name+' Link:'));
             
-	        c$('dd').appendTo(elem).append(
-	            c$('input:text', 'class:black,readonly:readonly,id:'+id+'_link')
-	            .val('Loading...').click(Events.text_click)
-	        );
-	        if (Util.isSet(publishConfig[id])) {
-	            c$('dd').css('float','right').appendTo(elem)
-	            .append(b$('Publish','class:short white sexy_announce_gray,isfor:'+id).click(Events.publish_click));
-	        }
-    	});
+            c$('dd').appendTo(elem).append(
+                c$('input:text', 'class:black,readonly:readonly,id:'+id+'_link')
+                .val('Loading...').click(Events.text_click)
+            );
+            if (Util.isSet(publishConfig[id])) {
+                c$('dd').css('float','right').appendTo(elem)
+                .append(b$('Publish','class:short white sexy_announce_gray,isfor:'+id).click(Events.publish_click));
+            }
+        });
     }
     
-	function updateUserLinks(callback) {
-	    var myCollection = new Collection(global.user_links);
+    function updateUserLinks(callback) {
+        var myCollection = new Collection(global.user_links);
         
-	    // on every collection move, add long link if there is not found
-	    myCollection.onMove(function(index, key, link) {
-	        if (!link.req_type || link.longUrl) {
-	            myCollection.MoveNext();
-	            return;
-	        }
-	        MW.getGiftLink({
-	            'message'  : 'Loading '+link.name+' link...',
-	            'req_type' : link.req_type,
-	            'req_name' : link.req_name,
-	            'city'     : link.city, 
-	            'success'  : function(longUrl) {
-	                global.user_links[ key ].longUrl = longUrl;
-	                myCollection.MoveNext();
-	            }
-	        });
-	    });
+        // on every collection move, add long link if there is not found
+        myCollection.onMove(function(index, key, link) {
+            if (!link.req_type || link.longUrl) {
+                myCollection.MoveNext();
+                return;
+            }
+            MW.getGiftLink({
+                'message'  : 'Loading '+link.name+' link...',
+                'req_type' : link.req_type,
+                'req_name' : link.req_name,
+                'city'     : link.city, 
+                'success'  : function(longUrl) {
+                    global.user_links[ key ].longUrl = longUrl;
+                    myCollection.MoveNext();
+                }
+            });
+        });
         
-	    myCollection.onEnd(callback);
+        myCollection.onEnd(callback);
         
-	    myCollection.MoveFirst();
-	}
+        myCollection.MoveFirst();
+    }
     
     function Initialize() {
         genMainDom();
         
         updateUserLinks(function() {
-	        // set saved data
-	        global.user_links.profile.shortUrl  = shortLinks.get('profile');
-	        global.user_links.promote.shortUrl  = shortLinks.get('promote');
-	        global.user_links.slots.shortUrl    = shortLinks.get('slots');
+            // set saved data
+            global.user_links.profile.shortUrl  = shortLinks.get('profile');
+            global.user_links.promote.shortUrl  = shortLinks.get('promote');
+            global.user_links.slots.shortUrl    = shortLinks.get('slots');
             // add shor links if there is not found
             $.each(global.user_links, function(id, link) {
                 log$(id+': '+link.shortUrl);
@@ -11390,8 +11389,8 @@ function MafiaWiper()
                 $('#top_div').html('Members that are not playing Mafia Wars: ' + users.length);
                 // show the results
                 showResults();
-		        // show popup
-		        popupElt.show();
+                // show popup
+                popupElt.show();
             });
         });
     }
@@ -13460,8 +13459,8 @@ function Battlefieldv2()
                 }
                 opp.title    = $.trim($('td:eq(0) span:first', element).text());
                 if ( elem = e$('td:eq(0) a:regex(href,controller=clan)', element) ) {                    
-	                opp.clanId   = global.Base64.decode(Util.uSplit(elem.attr('href')).id);
-	                opp.clanName = $.trim(elem.text());
+                    opp.clanId   = global.Base64.decode(Util.uSplit(elem.attr('href')).id);
+                    opp.clanName = $.trim(elem.text());
                 }
                 opp.name     = $.trim($('td:eq(0) a:regex(href,controller=stats)', element).text());
                 //opp.level    = Util.parseNum(Util.textNodes($('td:eq(0) .fight_list_name_area', element)));
@@ -13566,28 +13565,30 @@ function Battlefieldv2()
         }
         return this;
     };
-    
+
     /**
      * Create an ICE popup class
      * @param {String} popup_html
      * @return {CSIce}
      */
-    var CSIce = function(feed_js) {
-        this.count  = 0;
+    var CSIce = function(fight_result) {
+        this.count  = fight_result.total_ice_count;
         this.action = '';
         this.canPublish = false;
         this.attachment = new Object();
-        
-        if (!feed_js || !/MW.Feed/.test(feed_js)) {
+        this.ices_so_far = fight_result.ices_so_far;
+        this.ices_target = fight_result.ices_target;
+
+        if (!fight_result || !/MW.Feed/.test(fight_result.feed_js)) {
             return this;
         }
         this.canPublish = true;
         this.action  = '<a href="javascript: void(0);" class="sexy_button_new medium white sexy_announce_gray" ';
-        this.action += 'onclick="'+feed_js+'"><span><span>Share</span></span></a>';
-        
+        this.action += 'onclick="'+fight_result.feed_js+'"><span><span>Share</span></span></a>';
+
         var feed, obj;
         try {
-            obj = /^MW.Feed\((\{.*?\})\);$/.exec(feed_js);
+            obj = /^MW.Feed\((\{.*?\})\);$/.exec(fight_result.feed_js);
             eval ( 'var feed='+ obj[1] + ';' );
             this.attachment = feed.attachment;
             if (feed.attachment.description) {
@@ -13600,7 +13601,7 @@ function Battlefieldv2()
         }
         return this;
     };
-    
+
     var CSAutoPublish = function() {
         var publish = new Array();
         /**
@@ -13627,28 +13628,28 @@ function Battlefieldv2()
          */
         this.publishTo = function(target_id, callback) {
             var this_publish = publish.slice();
-	        var properties = new Object();
-	        publish = new Array();
-            
-	        $.each(this_publish, function(index, post) {
+            var properties = new Object();
+            publish = new Array();
+
+            $.each(this_publish, function(index, post) {
                 properties['#'+(index+1)] = {
                     'text': post.text,
                     'href': post.href
                 };
-	        });
-	        facebook.streamPublish({
-	            'target'      : target_id,
-	            'name'        : '{*actor*} has eliminated some players!',
-	            'properties'  : properties
-	        }, function(post_id) {
+            });
+            facebook.streamPublish({
+                'target'      : target_id,
+                'name'        : '{*actor*} has eliminated some players!',
+                'properties'  : properties
+            }, function(post_id) {
                 if (post_id && !post_id.error_code) {
                     addToLog( 'You\'ve  '+this_publish.length+' ICES.<br>Auto-Publish has posts all and reseted count.', 'published' );
                 }
                 else if (post_id.error_code) {
-	                addToLog( 'There is the error code #'+post_id.error_code+' publishing your ices.', 'published' );
+                    addToLog( 'There is the error code #'+post_id.error_code+' publishing your ices.', 'published' );
                 }
                 callback && callback();
-	        }, true);
+            }, true);
         };
         /**
          * Clear stored ices
@@ -13833,22 +13834,22 @@ function Battlefieldv2()
          * @param {String} by 'name', 'level', 'mafia' or 'iced'.
          */
         this.sort = function(by) {
-	        var sortBy = {
-	            'name': function(a, b) {
-	                var x = a.name.toLowerCase();
-	                var y = b.name.toLowerCase();
-	                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-	            },
-	            'level': function(a, b) {
-	                return b.level - a.level;
-	            },
-	            'mafia': function(a, b) {
-	                return b.mafia - a.mafia;
-	            },
-	            'iced': function(a, b) {
-	                return a.iced ? -1 : 1 ;
-	            }
-	        };
+            var sortBy = {
+                'name': function(a, b) {
+                    var x = a.name.toLowerCase();
+                    var y = b.name.toLowerCase();
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                },
+                'level': function(a, b) {
+                    return b.level - a.level;
+                },
+                'mafia': function(a, b) {
+                    return b.mafia - a.mafia;
+                },
+                'iced': function(a, b) {
+                    return a.iced ? -1 : 1 ;
+                }
+            };
             if ( players.length > 0 ) {
                 players.sort(sortBy[by]);
             }
@@ -13884,19 +13885,19 @@ function Battlefieldv2()
         saveSession_click: function() {
             var outText = 'GENERAL:\n';
             $.each({
-                'Total Fights: '            :'totalFight',
-                'Won Fights: '              :'wonFights',
-                'Lost Fights: '             :'lostFights',
-                'Iced Players: '            :'iced',
-                'Killed Players: '          :'kill',
-                'Total ICES: '              :'total_ices',
-                'Stolen Ices: '             :'stolenIces',
-                'Revenges: '                :'revenges',
-                'Attack gained: '           :'atkGained',
-                'Defense Gained: '          :'defGained',
-                'Experience Gained: '       :'experience',
-                'Experience Per Stamina: '  :'exp_per_sta',
-                'Victory Coins: '           :'coins'
+                'Total Fights: '           :'totalFight',
+                'Won Fights: '             :'wonFights',
+                'Lost Fights: '            :'lostFights',
+                'Iced Players: '           :'iced',
+                'Killed Players: '         :'kill',
+                'Total ICES: '             :'total_ices',
+                'Stolen Ices: '            :'stolenIces',
+                'Revenges: '               :'revenges',
+                'Attack gained: '          :'atkGained',
+                'Defense Gained: '         :'defGained',
+                'Experience Gained: '      :'experience',
+                'Experience Per Stamina: ' :'exp_per_sta',
+                'Victory Coins: '          :'coins'
             },
             function(name, value) {
                 if (Util.isFunc(fightStats[value])) {
@@ -13986,11 +13987,11 @@ function Battlefieldv2()
             
             if (selectedElts.length < 2 || confirm('Are you sure to open ALL selected users?')) {
                 selectedElts.each(function(index, elem) {
-		            if ( name === 'clanlist' ) {
-		                unsafeWindow.open( MW.getFamilyLink(elem.value) );
-		            } else {
-		                unsafeWindow.open( MW.getProfileLink(elem.value) );
-		            }
+                    if ( name === 'clanlist' ) {
+                        unsafeWindow.open( MW.getFamilyLink(elem.value) );
+                    } else {
+                        unsafeWindow.open( MW.getProfileLink(elem.value) );
+                    }
                 });
             }
             return false;
@@ -14255,9 +14256,9 @@ function Battlefieldv2()
         
         // START CITY, TRAVEL
         c$('li').appendTo(divListElt).append(c$('div').css('float','left')
-	        .append(x$('bfopt_forcestartingcity', 'Start City:'))
-	        .append(s$('bfopt_startingcity', 100))
-	        .append(c$('span').text('Travel To:'))
+            .append(x$('bfopt_forcestartingcity', 'Start City:'))
+            .append(s$('bfopt_startingcity', 100))
+            .append(c$('span').text('Travel To:'))
         ).append(createDropDownSelectList('travel_to_cities_menu', {
             'bfopt_fightinnewyork'  : 'New York',
             'bfopt_fightincuba'     : 'Cuba',
@@ -14267,10 +14268,10 @@ function Battlefieldv2()
             'bfopt_fightinitaly'    : 'Italy',
             'bfopt_fightinbrazil'   : 'Brazil'
         }).css({'left':280,'z-index':2})).append(c$('div').css('margin-left',410)
-	        .append(x$('bfopt_fightcitytime', 'After:'))
-	        .append(n$('bfopt_fightcitytimeout', 40))
-	        .append(c$('span').text('min.'))
-	        .append(x$('bfopt_travelwhennotargets', 'If no targets.'))
+            .append(x$('bfopt_fightcitytime', 'After:'))
+            .append(n$('bfopt_fightcitytimeout', 40))
+            .append(c$('span').text('min.'))
+            .append(x$('bfopt_travelwhennotargets', 'If no targets.'))
         );
         
         // RAPID FIRE!
@@ -14300,8 +14301,8 @@ function Battlefieldv2()
         
         // BANK MONEY
         c$('li').appendTo(divListElt).append(c$('div').css('float','left')
-	        .append(x$('bfopt_usebank', 'Bank if more than:'))
-	        .append(n$('bfopt_usebankwhen', 60))
+            .append(x$('bfopt_usebank', 'Bank if more than:'))
+            .append(n$('bfopt_usebankwhen', 60))
         ).append(createDropDownSelectList('back_to_cities_menu', {
             'bfopt_depositin1': 'New York',
             'bfopt_depositin2': 'Cuba',
@@ -14331,6 +14332,7 @@ function Battlefieldv2()
         .append(n$('bfopt_revengelevelof', 'than:', 60))
         .append(x$('bfopt_norevengeblacklist', 'but Not BlackListed.'));
         
+        // AUTO PUBLISH
         c$('li').appendTo(divListElt)
         .append(x$('bfopt_autopublish',  'Auto Publish after: '))
         .append(s$('bfopt_autopublishafter', 80))
@@ -14727,19 +14729,19 @@ function Battlefieldv2()
                 }
                 httpAjaxRequest({url: url, message: 'Loading id: '+id,
                     success: function(htmlText) {
-				        var result;
+                        var result;
                         if ( list_name === 'clanList' ) {
                             result = parseClanProfile(htmlText);
                             result.id = id;
                         } else {
                             result = getOpponentFromProfile(htmlText);
                         }
-				        if (!result.error_msg) {
+                        if (!result.error_msg) {
                             PlayerList[list_name].add(result);
-				        }
-				        else {
-				            log$('Error adding user_id: '+id+' to '+list_name+' "'+result.error_msg+'".'); 
-				        }
+                        }
+                        else {
+                            log$('Error adding user_id: '+id+' to '+list_name+' "'+result.error_msg+'".'); 
+                        }
                         log$('next profile...')
                         profiles.MoveNext();
                     }
@@ -14816,17 +14818,17 @@ function Battlefieldv2()
                 preAttack();
             });
         } else {
-	        sendMessage('Loading profile (' + p.name + ')...', true);    
-	        httpAjaxRequest({
-	            url: 'remote/' + MW.getIntURL('stats') + '&user=p|' + p.id,
-	            success: function(htmlText) {
-	                PlayerList.current = getOpponentFromProfile(htmlText);
-	                whiteListCache[p.id] = PlayerList.current.clone();
-	                updateNewOpponent();
-	                preAttack();
-	            }
-	        });
-	    }
+            sendMessage('Loading profile (' + p.name + ')...', true);    
+            httpAjaxRequest({
+                url: 'remote/' + MW.getIntURL('stats') + '&user=p|' + p.id,
+                success: function(htmlText) {
+                    PlayerList.current = getOpponentFromProfile(htmlText);
+                    whiteListCache[p.id] = PlayerList.current.clone();
+                    updateNewOpponent();
+                    preAttack();
+                }
+            });
+        }
     }
     
     /**
@@ -15067,17 +15069,17 @@ function Battlefieldv2()
         
         if (options.get('showLootEvents')) {
             fixMaxLogItems();
-	        updateItem = c$('div', 'class:update_item,id:generic_item').prependTo('#items_logs');
-	        
-	        c$('div', 'class:update_timestamp').appendTo(updateItem).html((new Date()).toUTCString());
-	        c$('div', 'class:update_icon').appendTo(updateItem)
-	        .append(c$('img').attr({
-	            'width': 40,
-	            'height': 40,
-	            'src': logIcon['loot']
-	        }));
-	        c$('div').addClass('update_pic').appendTo(updateItem).append(lootPic);
-	        item_txt = c$('div', 'class:update_txt').appendTo(updateItem).html('Loading item stats...');
+            updateItem = c$('div', 'class:update_item,id:generic_item').prependTo('#items_logs');
+            
+            c$('div', 'class:update_timestamp').appendTo(updateItem).html((new Date()).toUTCString());
+            c$('div', 'class:update_icon').appendTo(updateItem)
+            .append(c$('img').attr({
+                'width': 40,
+                'height': 40,
+                'src': logIcon['loot']
+            }));
+            c$('div').addClass('update_pic').appendTo(updateItem).append(lootPic);
+            item_txt = c$('div', 'class:update_txt').appendTo(updateItem).html('Loading item stats...');
         }
         
         function addToLootLog(sHtml) {
@@ -15109,19 +15111,19 @@ function Battlefieldv2()
             addToLootLog( lootCache[loot.item_id] );
         }
         else {
-	        httpAjaxRequest({
-	            'url': 'remote/' + MW.getIntURL('item', 'get_item_data') + '&item_id=' + loot.item_id, 
-	            'success': function(jsonData) {
-	                var popup;
-	                if ( jsonData.popup ) {
-	                    popup = c$('div').html(jsonData.popup).find('#'+jsonData.popup_id+' h3');
+            httpAjaxRequest({
+                'url': 'remote/' + MW.getIntURL('item', 'get_item_data') + '&item_id=' + loot.item_id, 
+                'success': function(jsonData) {
+                    var popup;
+                    if ( jsonData.popup ) {
+                        popup = c$('div').html(jsonData.popup).find('#'+jsonData.popup_id+' h3');
                         if ( item_txt ) {
-	                       item_txt.html('You Found: '+popup.html());
+                           item_txt.html('You Found: '+popup.html());
                         }
                         addToLootLog( lootCache[loot.item_id] = popup.html() );
-	                }
-	            }
-	        });
+                    }
+                }
+            });
         }
     }
     
@@ -15194,6 +15196,7 @@ function Battlefieldv2()
      */
     function addIcedToLog(ice, opp, killed) {
         var text = 'You', eventText = ' ICED ';
+        var compl_ice = '';
         var oppName = (opp.clanId !== null ? opp.clanName+' '+opp.name : opp.name);
         
         icedPlayerCache[opp.id] = opp.name; 
@@ -15212,8 +15215,53 @@ function Battlefieldv2()
             fightStats.revenges++;
             eventText += 'the THIEF ';
         }
-        
-        text += eventText + opp.anchor() + ' to get '+ ice.count + '.';
+        if ( ice.ices_so_far <  ice.ices_target ) {
+            if ( ice.ices_target < 1000 ) {
+                if ( ice.ices_target === 10 || ice.ices_target === 30 || ice.ices_target === 100 || ice.ices_target === 200 ) {
+                    compl_ice = ' 1';
+                }
+                else if ( ice.ices_target === 2 || ice.ices_target === 12 || ice.ices_target === 40 || ice.ices_target === 120 || ice.ices_target === 400 ) {
+                    compl_ice = ' 2';
+                }
+                else if ( ice.ices_target === 4 || ice.ices_target === 15 || ice.ices_target === 50 || ice.ices_target === 140 || ice.ices_target === 600 ) {
+                    compl_ice = ' 3';
+                }
+                else if ( ice.ices_target === 6 || ice.ices_target === 20 || ice.ices_target === 60 || ice.ices_target === 160 || ice.ices_target === 800 ) {
+                    compl_ice = ' 4';
+                }
+                else
+                {
+                     compl_ice = ' 5';
+                }
+
+                if ( ice.ices_target < 10 ) {
+                    compl_ice += ' - Bronze';
+                }
+                else if ( ice.ices_target < 30 ) {
+                    compl_ice += ' - Silver';
+                }
+                else if ( ice.ices_target < 100 ) {
+                    compl_ice += ' - Gold';
+                }
+                else if ( ice.ices_target < 200 ) {
+                    compl_ice += ' - Ruby';
+                }
+                else
+                {
+                    compl_ice += ' - Diamond';
+                }
+
+                text += eventText + opp.anchor() + ' to get '+ ice.count + '.<br>Season ices: ' + ice.ices_so_far + '/' + ice.ices_target + ' (still need ' + (ice.ices_target - ice.ices_so_far) + ' ices for tier' + compl_ice + ').';
+            }
+            else
+            {
+                text += eventText + opp.anchor() + ' to get '+ ice.count + '.<br>Season ices: ' + ice.ices_so_far + '/' + ice.ices_target + ' (just need ' + (ice.ices_target - ice.ices_so_far) + ' for finish).';
+            }
+        }
+        else
+        {
+            text += eventText + opp.anchor() + ' to get '+ ice.count + '.<br>Season ices: -/-, congratulations (' + ice.ices_target + ' ices).';
+        }
         text += '<br>' + ice.action;
         
         addToLog( text, 'iced', opp.image );
@@ -15244,7 +15292,7 @@ function Battlefieldv2()
                 return false;
             }
             if ( thief.inMafia ) {
-                result = 'But he\'s in your mafia.';
+                result = 'But this fighter is in your mafia. :)';
                 return true;
             }
             if ( options.get('takeRevenge') !== true ) {
@@ -15454,8 +15502,8 @@ function Battlefieldv2()
         {
             MW.deposit(StartCity, fightStats.userCash, function(result) {
                 if ( result ) {
-	                $('#bank_item', '#items_logs').remove();
-	                addToLog(result, 'bank');
+                    $('#bank_item', '#items_logs').remove();
+                    addToLog(result, 'bank');
                 }
                 callback();
             });
@@ -15519,7 +15567,7 @@ function Battlefieldv2()
             return 5;
         }
         else {
-            return 1;    
+            return 1;
         }
     }
     function setNewCurrentCity() {
@@ -15586,8 +15634,8 @@ function Battlefieldv2()
         
         // check if a valid opponent object 
         if (!opponent) {
-	        PlayerList.clear();
-	        refreshPlayerList(AttackNewOpponent, options.get('travelWhenNoTargets'));
+            PlayerList.clear();
+            refreshPlayerList(AttackNewOpponent, options.get('travelWhenNoTargets'));
             return;
         }
         // check if opponent is filtered 
@@ -15614,7 +15662,7 @@ function Battlefieldv2()
             else {
                 updateNewOpponent();
             }
-	        preAttack();
+            preAttack();
         });
     }
     
@@ -15664,10 +15712,10 @@ function Battlefieldv2()
                 break;
                 
             case (fs.stamina < opp.requirements.stamina || (op('stopWhenStamina') && fs.stamina < op('staminaToKeep'))):    
-	            if (op('keepFigthing')) {
-	                sTimerMessage = 'No stamina left, continue in %N% seconds.';
+                if (op('keepFigthing')) {
+                    sTimerMessage = 'No stamina left, continue in %N% seconds.';
                 } else {
-	                sStopMessage = 'AutoFight deactivated, No stamina left.';
+                    sStopMessage = 'AutoFight deactivated, No stamina left.';
                 }
                 break;
                 
@@ -15676,11 +15724,11 @@ function Battlefieldv2()
                     healPlayer(preAttack);
                     return;
                 } else if (fs.health < opp.requirements.health) {
-	                if (op('keepFigthing')) {
-	                    sTimerMessage = 'Heal is not possible due your low stamina, continue in %N% seconds.';
-	                } else {
-	                    sStopMessage = 'AutoFight deactivated, Heal is not possible due your low stamina.';
-	                }
+                    if (op('keepFigthing')) {
+                        sTimerMessage = 'Heal is not possible due your low stamina, continue in %N% seconds.';
+                    } else {
+                        sStopMessage = 'AutoFight deactivated, Heal is not possible due your low stamina.';
+                    }
                 }
                 break;
             
@@ -15709,12 +15757,12 @@ function Battlefieldv2()
             checkBankMoney();
             addAutoControls(false, true);
             statusTimer.start(sTimerMessage, delay, function() {
-	            reqSurvey(function() {
-	                addFightCountdown();
-	                addTravelCountdown();
+                reqSurvey(function() {
+                    addFightCountdown();
+                    addTravelCountdown();
                     preAttack();
-	            });
-	        });
+                });
+            });
             return;
         }
         if (!/xw_controller=fight/i.test(url)) {
@@ -15802,17 +15850,17 @@ function Battlefieldv2()
                 if ( lastGoodResult.success !== ERROR_SUCCESS ) { 
                     attack_again = false 
                 } else {
-	                fixAndUpdate(lastGoodResult);
-	                attack_again = lastGoodResult.attack_again;
+                    fixAndUpdate(lastGoodResult);
+                    attack_again = lastGoodResult.attack_again;
                 }
             }
             updateStats();
             
             switch (true) {
                 case levelUp_stop:
-	                clearAllTimers();
-	                addAutoControls(true);
-	                sendMessage('AutoFight deactivated, you Leveled UP!!.');
+                    clearAllTimers();
+                    addAutoControls(true);
+                    sendMessage('AutoFight deactivated, you Leveled UP!!.');
                     break;
                 case attack_again:
                     preAttack(); 
@@ -15840,65 +15888,65 @@ function Battlefieldv2()
             'url':url,
             'liteLoad':1,
             'success': function (htmlText) {
-	            if (abort_process) {
-	                return;
-	            }
-	            var fr; 
+                if (abort_process) {
+                    return;
+                }
+                var fr; 
                 if ( PlayerList.current.isNPC ) {
                     fr = parseNPCAttack(htmlText, bAuto);
                 } else {
                     fr = parseAttack(htmlText, bAuto);
                     updateFightResponse(fr);
                 }
-	            if (bAuto && (PlayerList.current.isNPC || fr.first_attack && !bAttackWhiteList)) {
-	                addNewOpponents(htmlText);
-	            }
-	            switch( fr.success ) {
-	                case ERROR_BAD_RESPONSE:
-	                    if (bAuto) {
-	                        addAutoControls(true);
-	                        statusTimer.start('Some error in server response, try again in %N% seconds.',8, preAttack);
-	                    }
-	                    else {
-	                        sendMessage('Error: Some error in server response.');
-	                        addManualControls(true);
-	                    }
-	                    break;
-	                    
-	                case ERROR_NO_FIGHT_RESULT:
-	                    if (bAuto) {
-	                        addAutoControls(true);
-	                        statusTimer.start('No fight result, continue in %N% seconds.',2, AttackNewOpponent);
-	                    }
-	                    else {
-	                        sendMessage('This opponent can\'t be attacked, go back and try a different one.');
-	                        PlayerList.current.attack = null;
-	                        addManualControls(true);
-	                    }
-	                    break;
-	                    
-	                case ERROR_SUCCESS:
-	                    if (bAuto) {
-	                        if (fr.levelUp_stop) {
-	                            abort_process = true;
-	                            clearAllTimers();
-	                            addAutoControls(true);
-	                            sendMessage('AutoFight deactivated, you Leveled UP!!.');
-	                        } 
-	                        else if (fr.attack_again) {
-	                            setAttackTimer(preAttack);
-	                        }
-	                        else {
-	                            addAutoControls();
-	                            checkBankMoney(AttackNewOpponent);
-	                        }
-	                    }
-	                    else {
-	                        checkBankMoney(addManualControls);
-	                    }
-	                    break;
-	            }
-	        }
+                if (bAuto && (PlayerList.current.isNPC || fr.first_attack && !bAttackWhiteList)) {
+                    addNewOpponents(htmlText);
+                }
+                switch( fr.success ) {
+                    case ERROR_BAD_RESPONSE:
+                        if (bAuto) {
+                            addAutoControls(true);
+                            statusTimer.start('Some error in server response, try again in %N% seconds.',8, preAttack);
+                        }
+                        else {
+                            sendMessage('Error: Some error in server response.');
+                            addManualControls(true);
+                        }
+                        break;
+                        
+                    case ERROR_NO_FIGHT_RESULT:
+                        if (bAuto) {
+                            addAutoControls(true);
+                            statusTimer.start('No fight result, continue in %N% seconds.',2, AttackNewOpponent);
+                        }
+                        else {
+                            sendMessage('This opponent can\'t be attacked, go back and try a different one.');
+                            PlayerList.current.attack = null;
+                            addManualControls(true);
+                        }
+                        break;
+                        
+                    case ERROR_SUCCESS:
+                        if (bAuto) {
+                            if (fr.levelUp_stop) {
+                                abort_process = true;
+                                clearAllTimers();
+                                addAutoControls(true);
+                                sendMessage('AutoFight deactivated, you Leveled UP!!.');
+                            } 
+                            else if (fr.attack_again) {
+                                setAttackTimer(preAttack);
+                            }
+                            else {
+                                addAutoControls();
+                                checkBankMoney(AttackNewOpponent);
+                            }
+                        }
+                        else {
+                            checkBankMoney(addManualControls);
+                        }
+                        break;
+                }
+            }
         });
     }
     // -----------------------------
@@ -15921,13 +15969,13 @@ function Battlefieldv2()
         var attacker_hp;
         var healthBarWidth = 215;
     
-	    function getHealthBarCss(healthPerc) {
-	        switch(true) {
-	            case (healthPerc < 34):  return 'hpbg_low';
-	            case (healthPerc < 67):  return 'hpbg_mid';
-	            default:  return 'hpbg_high';
-	        };
-	    }
+        function getHealthBarCss(healthPerc) {
+            switch(true) {
+                case (healthPerc < 34):  return 'hpbg_low';
+                case (healthPerc < 67):  return 'hpbg_mid';
+                default:  return 'hpbg_high';
+            };
+        }
 
         if( player_id == 0 ) {
             attacker_hp = val;
@@ -15947,19 +15995,19 @@ function Battlefieldv2()
             target_css = getHealthBarCss(defender_hp);
         }
 
-	    (function animateHealth( going_up ) {
-	        
-	        var fill_bar = $(hp_fill, popupElt.content);
-	        if( going_up ) {
-	            fill_bar.stop(true).animate({ 'width': target_width + 'px' }, 400 );
-	        } else {
-	            fill_bar.stop(true).animate({ 'width': target_width + 'px' }, 100 );            
-	        }
-	
-	        fill_bar.removeClass('hpbg_low hpbg_mid hpbg_high');
-	        fill_bar.addClass(target_css);
+        (function animateHealth( going_up ) {
             
-	    })( val > 0 );
+            var fill_bar = $(hp_fill, popupElt.content);
+            if( going_up ) {
+                fill_bar.stop(true).animate({ 'width': target_width + 'px' }, 400 );
+            } else {
+                fill_bar.stop(true).animate({ 'width': target_width + 'px' }, 100 );            
+            }
+    
+            fill_bar.removeClass('hpbg_low hpbg_mid hpbg_high');
+            fill_bar.addClass(target_css);
+            
+        })( val > 0 );
     }
 
     function updateAttackerAttackVal(val, val_no_boost, used_boost) {
@@ -16169,8 +16217,8 @@ function Battlefieldv2()
         if (Util.isSet(barHtml)) {
             if (barHtml != '') {
                 var fct = h$(barHtml).find('.faction_main .faction_container');
-	            fightStats.yakuza = Regex.factionProgress(fct.eq(0).find('.zy_progress_bar_faction_text').text());
-	            fightStats.triad  = Regex.factionProgress(fct.eq(1).find('.zy_progress_bar_faction_text').text());
+                fightStats.yakuza = Regex.factionProgress(fct.eq(0).find('.zy_progress_bar_faction_text').text());
+                fightStats.triad  = Regex.factionProgress(fct.eq(1).find('.zy_progress_bar_faction_text').text());
                 statsElt.show();
             }
         }
@@ -16249,16 +16297,16 @@ function Battlefieldv2()
         $('#options_wrapper', popupElt.content).hide();
         $('#opponents_table', popupElt.content).empty();
         $('#fight_wrapper', popupElt.content).html(global.Base64.decode(
-		    'PGRpdiBpZD0id3JhcHBlcl9hdHRhY2tlciIgY2xhc3M9InVzZXJib3giIHN0eWxlPSJmbG9hdDpsZWZ0O3Bvc2l0aW9uOnJlbGF0'+
-		    'aXZlOyI+PC9kaXY+CQ0KPGRpdiBpZD0iZmlnaHRfYnRuX3BhbmVsIiBzdHlsZT0iZmxvYXQ6IGxlZnQ7Ij4JDQoJPGRpdiBpZD0i'+
-		    'YXR0YWNrZXJfYmVzdF9pdGVtcyIgc3R5bGU9ImZsb2F0OiBsZWZ0OyI+DQoJCTxkaXYgY2xhc3M9InN1YmhkciI+VG9wIEl0ZW1z'+
-		    'PC9kaXY+DQoJPC9kaXY+CQ0KCTxkaXYgaWQ9IndyYXBwZXJfYWN0aW9ucyIgc3R5bGU9ImZsb2F0OiBsZWZ0OyI+DQoJCTxkaXYg'+
-		    'c3R5bGU9Im1hcmdpbi10b3A6IDEwcHg7dGV4dC1hbGlnbjpyaWdodDsgcGFkZGluZy1yaWdodDoxNXB4OyBoZWlnaHQ6IDIwcHg7'+
-		    'Ij48L2Rpdj4NCgkJPGRpdiBjbGFzcz0iZnYyX2J0bmNvbnRhaW5lciIgc3R5bGU9InBvc2l0aW9uOnJlbGF0aXZlOyAiPjwvZGl2'+
-		    'PgkJCQ0KCTwvZGl2Pg0KCTxkaXYgaWQ9ImRlZmVuZGVyX2Jlc3RfaXRlbXMiIHN0eWxlPSJmbG9hdDogbGVmdDsiPg0KCQk8ZGl2'+
-		    'IGNsYXNzPSJzdWJoZHIiPlRvcCBJdGVtczwvZGl2Pg0KCTwvZGl2PgkJDQoJPGRpdiBzdHlsZT0iY2xlYXI6IGJvdGg7Ij48L2Rp'+
-		    'dj4NCjwvZGl2PgkNCjxkaXYgaWQ9IndyYXBwZXJfZGVmZW5kZXIiIGNsYXNzPSJ1c2VyYm94IiBzdHlsZT0iZmxvYXQ6bGVmdDtw'+
-		    'b3NpdGlvbjpyZWxhdGl2ZTsiPjwvZGl2Pg0KPGRpdiBzdHlsZT0iY2xlYXI6IGJvdGg7Ij48L2Rpdj4J'
+            'PGRpdiBpZD0id3JhcHBlcl9hdHRhY2tlciIgY2xhc3M9InVzZXJib3giIHN0eWxlPSJmbG9hdDpsZWZ0O3Bvc2l0aW9uOnJlbGF0'+
+            'aXZlOyI+PC9kaXY+CQ0KPGRpdiBpZD0iZmlnaHRfYnRuX3BhbmVsIiBzdHlsZT0iZmxvYXQ6IGxlZnQ7Ij4JDQoJPGRpdiBpZD0i'+
+            'YXR0YWNrZXJfYmVzdF9pdGVtcyIgc3R5bGU9ImZsb2F0OiBsZWZ0OyI+DQoJCTxkaXYgY2xhc3M9InN1YmhkciI+VG9wIEl0ZW1z'+
+            'PC9kaXY+DQoJPC9kaXY+CQ0KCTxkaXYgaWQ9IndyYXBwZXJfYWN0aW9ucyIgc3R5bGU9ImZsb2F0OiBsZWZ0OyI+DQoJCTxkaXYg'+
+            'c3R5bGU9Im1hcmdpbi10b3A6IDEwcHg7dGV4dC1hbGlnbjpyaWdodDsgcGFkZGluZy1yaWdodDoxNXB4OyBoZWlnaHQ6IDIwcHg7'+
+            'Ij48L2Rpdj4NCgkJPGRpdiBjbGFzcz0iZnYyX2J0bmNvbnRhaW5lciIgc3R5bGU9InBvc2l0aW9uOnJlbGF0aXZlOyAiPjwvZGl2'+
+            'PgkJCQ0KCTwvZGl2Pg0KCTxkaXYgaWQ9ImRlZmVuZGVyX2Jlc3RfaXRlbXMiIHN0eWxlPSJmbG9hdDogbGVmdDsiPg0KCQk8ZGl2'+
+            'IGNsYXNzPSJzdWJoZHIiPlRvcCBJdGVtczwvZGl2Pg0KCTwvZGl2PgkJDQoJPGRpdiBzdHlsZT0iY2xlYXI6IGJvdGg7Ij48L2Rp'+
+            'dj4NCjwvZGl2PgkNCjxkaXYgaWQ9IndyYXBwZXJfZGVmZW5kZXIiIGNsYXNzPSJ1c2VyYm94IiBzdHlsZT0iZmxvYXQ6bGVmdDtw'+
+            'b3NpdGlvbjpyZWxhdGl2ZTsiPjwvZGl2Pg0KPGRpdiBzdHlsZT0iY2xlYXI6IGJvdGg7Ij48L2Rpdj4J'
         )).show();
         showDiv('events', '_list');
         showFightRewards();
@@ -16300,8 +16348,8 @@ function Battlefieldv2()
     function addAutoControls(onlyRunAway, bInstantHeal) {
         var wrapper = hideFightControls();
         if (onlyRunAway !== true) {
-	        c$('div', 'fv2_button_row1').appendTo(wrapper)
-	        .append(b$('Stop','class:short red fightV2AttackBtn').click(Events.stop_click));
+            c$('div', 'fv2_button_row1').appendTo(wrapper)
+            .append(b$('Stop','class:short red fightV2AttackBtn').click(Events.stop_click));
         }
         if (onlyRunAway !== true && fightStats.healthpct < 80) {
             c$('div', 'fv2_button_row2').appendTo(wrapper)
@@ -16444,22 +16492,22 @@ function Battlefieldv2()
         
         // check ICE state
         if ( opponent.ice_state === 0 ) {
-	        if( fight_result.you_just_killed ) {
-	            bOpponentGetIced = true;
-	            addIcedToLog(new CSIce(fight_result.feed_js), opponent, true);
-	        } else if( fight_result.you_just_iced ) {
-	            bOpponentGetIced = true;
-	            addIcedToLog(new CSIce(fight_result.feed_js), opponent, false);
-	        } else if ( fight_result.ice_was_just_stolen ) {
-	            bOpponentGetIced = true;
-	            addStolenIceToLog(new CSStolenIce(fight_result), opponent, autoMode);
-	        }
+            if( fight_result.you_just_killed ) {
+                bOpponentGetIced = true;
+                addIcedToLog(new CSIce(fight_result), opponent, true);
+            } else if( fight_result.you_just_iced ) {
+                bOpponentGetIced = true;
+                addIcedToLog(new CSIce(fight_result), opponent, false);
+            } else if ( fight_result.ice_was_just_stolen ) {
+                bOpponentGetIced = true;
+                addStolenIceToLog(new CSStolenIce(fight_result), opponent, autoMode);
+            }
         }
         // level up
         if (fight_data.popup && /levelUpBg/.test(fight_data.popup) ) {
             if ( options.get('stopAfterLevelUp') ) {
-	            $('#popup_fodder').html(fight_data.popup);
-	            bLevelUpStop = true;
+                $('#popup_fodder').html(fight_data.popup);
+                bLevelUpStop = true;
                 setTimeout(function() {
                     $('.pop_bg, .pop_box', '#'+fight_data.popup_id).show();
                 },1000)
@@ -16561,11 +16609,11 @@ function Battlefieldv2()
                 attack_again = false;
                 // add enemy to blacklist
                 if ( options.get('useBlacklist') ) {
-	                if (PlayerList.addCurrentToBlackList()) {
-	                    fightStats.blacklisted++;
-	                    addToLog('"The beast" '+opponent.anchor()+' is too strong!, added to BlackList.','blacklist',opponent.image);
-	                }
-	            }
+                    if (PlayerList.addCurrentToBlackList()) {
+                        fightStats.blacklisted++;
+                        addToLog('"The beast" '+opponent.anchor()+' is too strong!, added to BlackList.','blacklist',opponent.image);
+                    }
+                }
             }
         }
         else 
@@ -16663,25 +16711,25 @@ function Battlefieldv2()
         PlayerList.whiteList = new CSList('whiteList');
         PlayerList.clanList  = new CSList('clanList');
         
-	    travelCountdown = new Countdown('#timer_timetotravel', function() {
-	        setNewCurrentCity();
-	        addTravelCountdown();
-	    }, 'Travel to new city in: ');
-	    fightResumeCountdown = new Countdown('#msgcontainer', function() {
-	        abort_process = false;
-	        sendMessage('Updating...', true);
-	        reqSurvey(AttackNewOpponent);
+        travelCountdown = new Countdown('#timer_timetotravel', function() {
+            setNewCurrentCity();
+            addTravelCountdown();
+        }, 'Travel to new city in: ');
+        fightResumeCountdown = new Countdown('#msgcontainer', function() {
+            abort_process = false;
+            sendMessage('Updating...', true);
+            reqSurvey(AttackNewOpponent);
             addTravelCountdown();
             addFightCountdown();
-	    }, 'Resume AutoFight in: ');
-	    fightCountdown = new Countdown('#timer_timetopause', function() {
+        }, 'Resume AutoFight in: ');
+        fightCountdown = new Countdown('#timer_timetopause', function() {
             abort_process = true;
             clearAllTimers();
             setTimeout(function() {
-	            addAutoControls(true);
-	            addFightResumeCountdown();
+                addAutoControls(true);
+                addFightResumeCountdown();
             },2000);
-	    }, 'Pause AutoFight in: ');
+        }, 'Pause AutoFight in: ');
         // Generate DOM
         genMainDom();
         
@@ -16697,9 +16745,9 @@ function Battlefieldv2()
                 updateUserFields(jsonData);
                 fightStats.startGroupAtk = Util.parseNum(jsonData.fightbar.group_atk);
                 fightStats.startGroupDef = Util.parseNum(jsonData.fightbar.group_def);
-	            updateStats();
-	            // get players from fight_controller page
-	            if ($('#inner_page').attr('class') == 'fight_controller') {
+                updateStats();
+                // get players from fight_controller page
+                if ($('#inner_page').attr('class') == 'fight_controller') {
                     addNewOpponents($('#inner_page').html());
                     if (PlayerList.length() > 0) {
                         genEnemyListDom();
@@ -16707,7 +16755,7 @@ function Battlefieldv2()
                         $('#ctrlcontainer', popupElt.content).show();
                         return;
                     }
-	            }
+                }
                 // if no opponents, refresh.
                 Events.refresh_click();
             }
@@ -17004,12 +17052,12 @@ function ReminderChecker(url) {
     
     options.load(function() {
     
-	    if ( !Util.isArray(options.get('all')) ) {
-	        options.set('all', new Array());
-	        options.save();
-	    } else if ( options.get('all').length < 1 ) {
-	        return;
-	    }
+        if ( !Util.isArray(options.get('all')) ) {
+            options.set('all', new Array());
+            options.save();
+        } else if ( options.get('all').length < 1 ) {
+            return;
+        }
         
         $.each(options.get('all'), function(index, r) {
             log$('Reminder '+r.name+' time:'+Util.toDateString((r.time-now)*1000));
@@ -17029,17 +17077,17 @@ function ReminderChecker(url) {
     });
     
     function testUrl(test_params) {
-	    var bValid = false;
+        var bValid = false;
         var p = Util.uSplit(test_params);
         
-	    if ( p.xw_controller && p.xw_action ) {
+        if ( p.xw_controller && p.xw_action ) {
             bValid = true;
-	        $.each(p, function(name,value) {
-	            if ( String(url).indexOf(name+'='+value) === -1 ) {
-	                bValid = false;
-	            }
-	        });
-	    }
+            $.each(p, function(name,value) {
+                if ( String(url).indexOf(name+'='+value) === -1 ) {
+                    bValid = false;
+                }
+            });
+        }
         return bValid;
     }
     
@@ -17110,19 +17158,19 @@ function ReminderChecker(url) {
             return false;
         }
         
-	    function doReminderStep1() {
+        function doReminderStep1() {
             updateReminder();
             reminderLayout.slideUp('medium',function() {
                 reminderLayout.remove();
             });
             if ( c_reminder.gotocity === true ) {
-		        if (MW.currentCity() !== parseInt(c_reminder.gotocityid)) {
-		            MW.travel(c_reminder.gotocityid,'inner_page',doReminderStep2);
+                if (MW.currentCity() !== parseInt(c_reminder.gotocityid)) {
+                    MW.travel(c_reminder.gotocityid,'inner_page',doReminderStep2);
                     return;
-		        }
+                }
             }
             doReminderStep2();
-	    }
+        }
         function doReminderStep2() {
             var rgx, url = String(c_reminder.gotopageurl);
             if ( c_reminder.gotopage === true ) {
@@ -17147,10 +17195,10 @@ function ReminderChecker(url) {
             if ( c_reminder.runplugin === true ) {
                 var options = new Config('plugins', defaults.plugins);
                 options.load(function() {
-	                var plugin = options.get('all')[c_reminder.runpluginid];
-	                if (Util.isString(plugin.click)) {
-	                    window.location = plugin.click;
-	                }
+                    var plugin = options.get('all')[c_reminder.runpluginid];
+                    if (Util.isString(plugin.click)) {
+                        window.location = plugin.click;
+                    }
                 });
             }
         }
@@ -17229,12 +17277,12 @@ function ReminderEditor() {
             }
             showAskPopup('Remove Selected','Are you sure?',function() {
                 
-	            options.get('all').splice(rID, 1);
-	            $('#app_list',popupElt.content).empty();
-	            $('#info_panel').hide();
-	            options.save(function() {
-	                $.each(options.get('all'), addNewReminder);
-	            });
+                options.get('all').splice(rID, 1);
+                $('#app_list',popupElt.content).empty();
+                $('#info_panel').hide();
+                options.save(function() {
+                    $.each(options.get('all'), addNewReminder);
+                });
             });
             return false;
         },
@@ -17424,10 +17472,10 @@ function ReminderEditor() {
             $.each(plugins.get('all'), function(index, p) {
                 plugins_options[''+index] = p.name;
             });
-	        popupElt.applyOptions({
-	            'setting_gotocityid': global.cities,
-	            'setting_runpluginid': plugins_options
-	        });
+            popupElt.applyOptions({
+                'setting_gotocityid': global.cities,
+                'setting_runpluginid': plugins_options
+            });
         });
     }
     
@@ -17499,8 +17547,8 @@ function giftFormControls()
         createButton().addEventListener('click', function() {
             var imgElt = document.createElement('img');
             imgElt.setAttribute('src', global.resource.ajax_loader );
-	        divElt.innerHTML = '';
-	        divElt.appendChild(imgElt);
+            divElt.innerHTML = '';
+            divElt.appendChild(imgElt);
             getShortURL(url, showShortenedURL, showManualButton);
         }, false);
     } 
@@ -17557,19 +17605,19 @@ function giftFormControls()
     };
     
     // add version text in fb canvas
-	function addVersionText() {
-	    var canvas_iframe = document.evaluate('//iframe[@class="canvas_iframe_util"]', 
+    function addVersionText() {
+        var canvas_iframe = document.evaluate('//iframe[@class="canvas_iframe_util"]', 
              document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-	    
-	    if (canvas_iframe !== null) {
-	        var divElt = document.createElement('div');
-	        
-	        divElt.innerHTML = '<span style="font-weight: bold; font-size: 14px;">'+
-	            scriptAppInfo.appName + ' v' + scriptAppInfo.appVer + '&nbsp;|&nbsp;' +
-	            '<a href="'+ scriptAppInfo.appUrl + '">Check Updates</a></span>';
-	        canvas_iframe.parentNode.insertBefore(divElt, canvas_iframe);
-	    }
-	}
+        
+        if (canvas_iframe !== null) {
+            var divElt = document.createElement('div');
+            
+            divElt.innerHTML = '<span style="font-weight: bold; font-size: 14px;">'+
+                scriptAppInfo.appName + ' v' + scriptAppInfo.appVer + '&nbsp;|&nbsp;' +
+                '<a href="'+ scriptAppInfo.appUrl + '">Check Updates</a></span>';
+            canvas_iframe.parentNode.insertBefore(divElt, canvas_iframe);
+        }
+    }
     
     // =========================================================
     // Make sure we are in a correct url
@@ -17818,38 +17866,38 @@ global.resource = {
     ,
     pluginmanager_title: 'data:image/gif;base64,' + 
     'R0lGODlhzAApAPYAAAQLAAYNAgcOAwkQBQsSBwwTCQ4VChAWDBIYDhMaEBUbERcdExgfFRogFhwiGB0kGh8lHCEnHSIoHyQqISYsIigtJCkvJisxKC0yKS40KzA2LTI3LzM5MDU6Mjc8NDg+NTo/NzxBOT1DOz9EPEFGPkNHQERJQUZLQ0hMRUlOR0tQSE1RSk5TTFBV'+
-	'TlJWT1NYUVVZU1dbVFldVlpeWFxgWl5iW19jXWFlX2NnYGRoYmZqZGhrZmltZ2tvaW1wa29ybXB0bnJ1cHR3cnV5c3d6dXl8d3p9eXx/en6BfH+CfoGEf4OGgYSHg4aJhYiLhoqMiIuOio2Pi4+RjZCTj5KUkZSWkpWYlJeZlpmbmJqdmZyem56gnaChnqGjoKOloqWm'+
-	'pKaopaiqp6qrqautq62urK+wrrCysLKzsbS1s7a3tbe4t7m6uLu8ury9vL6/vcDAv8HCwcPEw8XFxMbHxsjJyMrKycvMy83Ozc/Pz9HR0NLS0tTU1NbW1tfX19nZ2QAAACwAAAAAzAApAAAH/4AJgoMJBwCHiImKi4yNjo+QkYyEhAWKlIOSmpucnZpGfqGioWpLnqeo'+
-	'qYmgo6FiiV6toU6qtbaorLKiDre9voe5rSCHGLp+tL/JygDBunTL0J3Nol+HWsbI0dq4xqMp2+CN06IQCN3Z4emQzXqyUOrw46E9Lefw9+KtAgHtomT44ZphEYWGiygueEahA4ivmQAAsQgeakGxIqOKFgFgbLEoRBQvZsxwsbFA0UaOGjEi2riuFQpjIxKKWsjSpMqJ'+
-	'NxPVZOQRpEiSNk9mFLpihCFEDgEYFKXmEJlRRBg9FRUVAJ1RNBKZMcYj0dRQVb/6qWYV6yOHfGTpASBzlqJ+of+wKBJL9qqorIng+pG7aKuurojEtnoGQPAoMCWZ6VM6qmlhqFIhl72LCE03P3gfU3XaqszkUJkZObzWygpbhYlItMIzt/NnzKlXL7LcLbNhUYRvj4qg'+
-	'eNTDpaQ4b14ktqpd0IdKXPbDWjhY56KEHIftyKEPWVnbHks0sJUIr7Kkm0XUfdR3RMovN9fsDLouNL1F/W4MvWrr4dPxMlkti0N997qEtohDIsgyjHbo2CGLaYEtR90hCpaWyH6jaBeKf+zJkpuDFiQFnB+OFRcZfuOBMco/DbTCwn8ZGiOgIg6Z0woCp82ECAe6wAHe'+
-	'cpnhKIuOiJjoDwApjrJii1YkaUX/F+5ZIaQoLnhIX4b27fjca3iJ1cMhernAom7j5eMbAGmNcgiCiORgjAQN8pjmmm3Ow+UoXlI54pVlgiYlUyzed2V+0PkwJ5RfOvjiKovJMQphaB4CnF4wxFkbIo+OEmmgg4ZSp4jESZbfnsHZ2SmJlGUoKABdFiqKFAGetZhfoTYK'+
-	'QIR+UDFKFZKyih0itNoqCq6Yokpnn1b6YRxWST3phxnESnpsqWKdmqqoxQ2xa3WLKQtfjW4BAMEoQMAhCrP1WdsKXt+KEu64kko7rKh+GnvIpzM+0AoYzbIIqKmHTOHEv05sKllxBlwrpnwQjUJuo6qJwgJwfDhb8LmHNBzK/8OiRBysvwALPFy8VdHqR5QOMsgpyPOO'+
-	'F+0jnIpYHnLYjvnhP9xuB4ALo3CAxCgQ/PcydTiLojPPwTYiGBNIMzFFfRVs0AoH8oxiQr6i7rtyDlhn7ex/L4Up2mIzn4kaADvvEsMow9jZdallh+LA2aKkfXXWWEvaChcAttJU1KFsC2+xz8K8srjvtgyZj6UeHMp8Q9aMjBWjEABD4YdTDADkokhOuSiCEk5oi6Pg'+
-	'DfoochjCN5BUc2r1KJ234vGVIk6c+Ncynyi2jQDAupYJmz8nO8y6A8D754O7nncoooNpxgPArGYHG1iogPKof6rMOgCea6rqlZYr7gfjodDcqP/nzxQoChIsWk4+AOaHgj6/2Y98vB/JL/dBfIs7cjLgKUN7ffyvk5eotHMopIDNdo47RJ7cAADE+cFkkiGgAkXBQAdC'+
-	'kHPYMx6VasBBDrrHDSJjTVKMJpnprQ6DVdCg4UgFM++Bzw/iQ83v4FMMUeCramaZIQBqGIobriyFvRMgygTQChKM8E5C5B+WgjWtFVZvdgM6YOPQ5ACFAcACo9iW6sxSRXZhUSL8EhbxSqhEeo2JhB8ro/UwKEbtUctTXoti7aaImi+6AgASGAWQtkgZO/rhFXkUxR6v'+
-	'10b5/W1rWDoi9ZKIyBOGwl1jHA4fW0g7hIUtgQ7EV7pC0ZxJwib/k96qEBODWKVGImsxaLySCdf4yEwZ0okC3JcLGUNHG7XPD14AQBdFoS+z3DKXuwzFKCOpSjXeRZHTW6X/2NjEgcERijCSYvhu5xYVhG4AC2iFAXBIGWseBJvaDGMz02jKY6ISiaXs5TJbWcgAhuWZ'+
-	'lJSjJRGIpqBdRgHcRI49u4HPlbUzdfDEDDKVqEzBEXKcsAtoAZs3x2kmUAYO6pknswLR5Uj0oKREZ//0dM5FpjOf1PEnQgU4UVc1FIbU3I4NHEQBkGZlpctpqUgz6tGNCrSjyTSmQZlJ05LGbJ61dAsOHIQBlwJgqMsp6kyJyUh1cvSM6CyAVKV6iJcxKE9+/0DBIcQw'+
-	'incAQIXOZOGDKpm/S6KJBw7yT0nRuhz/cFUUXgUrVaZKVZcO1G6tkAEAKCSKDyBVFB44hK9EkYGKMvWdYl0o/r5HS4ei6ToHAcABnmZUyCJPspQdbCgKK9f22BWnxZKFXg3Lz0NEwUHudOpY5VlWeqLGCaEDgIwAa1TYRna2oQjsaZcTwMGolgZ3nZ8f9BpMXXimYqjd'+
-	'XizjGM2TxtBGQIgtbv0wjJJG97bCAIDFutHbRf02uKMThV4BQITL9AwRsMriYX9rUqA6FjXXvex0q6tQAMSXfrLNbu7ew1TffhaqixQtImJgIT+MgXmKUJYfmKSoV4b1ifFsrjl7UZrA++Jtvka1cH7RFqRWMNiNYNpQYqOxgRbcoAYraIAjJvCCHMSANwDIBENmzAkW'+
-	'uxjGMv5FIAAAOw=='
-	,
+    'TlJWT1NYUVVZU1dbVFldVlpeWFxgWl5iW19jXWFlX2NnYGRoYmZqZGhrZmltZ2tvaW1wa29ybXB0bnJ1cHR3cnV5c3d6dXl8d3p9eXx/en6BfH+CfoGEf4OGgYSHg4aJhYiLhoqMiIuOio2Pi4+RjZCTj5KUkZSWkpWYlJeZlpmbmJqdmZyem56gnaChnqGjoKOloqWm'+
+    'pKaopaiqp6qrqautq62urK+wrrCysLKzsbS1s7a3tbe4t7m6uLu8ury9vL6/vcDAv8HCwcPEw8XFxMbHxsjJyMrKycvMy83Ozc/Pz9HR0NLS0tTU1NbW1tfX19nZ2QAAACwAAAAAzAApAAAH/4AJgoMJBwCHiImKi4yNjo+QkYyEhAWKlIOSmpucnZpGfqGioWpLnqeo'+
+    'qYmgo6FiiV6toU6qtbaorLKiDre9voe5rSCHGLp+tL/JygDBunTL0J3Nol+HWsbI0dq4xqMp2+CN06IQCN3Z4emQzXqyUOrw46E9Lefw9+KtAgHtomT44ZphEYWGiygueEahA4ivmQAAsQgeakGxIqOKFgFgbLEoRBQvZsxwsbFA0UaOGjEi2riuFQpjIxKKWsjSpMqJ'+
+    'NxPVZOQRpEiSNk9mFLpihCFEDgEYFKXmEJlRRBg9FRUVAJ1RNBKZMcYj0dRQVb/6qWYV6yOHfGTpASBzlqJ+of+wKBJL9qqorIng+pG7aKuurojEtnoGQPAoMCWZ6VM6qmlhqFIhl72LCE03P3gfU3XaqszkUJkZObzWygpbhYlItMIzt/NnzKlXL7LcLbNhUYRvj4qg'+
+    'eNTDpaQ4b14ktqpd0IdKXPbDWjhY56KEHIftyKEPWVnbHks0sJUIr7Kkm0XUfdR3RMovN9fsDLouNL1F/W4MvWrr4dPxMlkti0N997qEtohDIsgyjHbo2CGLaYEtR90hCpaWyH6jaBeKf+zJkpuDFiQFnB+OFRcZfuOBMco/DbTCwn8ZGiOgIg6Z0woCp82ECAe6wAHe'+
+    'cpnhKIuOiJjoDwApjrJii1YkaUX/F+5ZIaQoLnhIX4b27fjca3iJ1cMhernAom7j5eMbAGmNcgiCiORgjAQN8pjmmm3Ow+UoXlI54pVlgiYlUyzed2V+0PkwJ5RfOvjiKovJMQphaB4CnF4wxFkbIo+OEmmgg4ZSp4jESZbfnsHZ2SmJlGUoKABdFiqKFAGetZhfoTYK'+
+    'QIR+UDFKFZKyih0itNoqCq6Yokpnn1b6YRxWST3phxnESnpsqWKdmqqoxQ2xa3WLKQtfjW4BAMEoQMAhCrP1WdsKXt+KEu64kko7rKh+GnvIpzM+0AoYzbIIqKmHTOHEv05sKllxBlwrpnwQjUJuo6qJwgJwfDhb8LmHNBzK/8OiRBysvwALPFy8VdHqR5QOMsgpyPOO'+
+    'F+0jnIpYHnLYjvnhP9xuB4ALo3CAxCgQ/PcydTiLojPPwTYiGBNIMzFFfRVs0AoH8oxiQr6i7rtyDlhn7ex/L4Up2mIzn4kaADvvEsMow9jZdallh+LA2aKkfXXWWEvaChcAttJU1KFsC2+xz8K8srjvtgyZj6UeHMp8Q9aMjBWjEABD4YdTDADkokhOuSiCEk5oi6Pg'+
+    'DfoochjCN5BUc2r1KJ234vGVIk6c+Ncynyi2jQDAupYJmz8nO8y6A8D754O7nncoooNpxgPArGYHG1iogPKof6rMOgCea6rqlZYr7gfjodDcqP/nzxQoChIsWk4+AOaHgj6/2Y98vB/JL/dBfIs7cjLgKUN7ffyvk5eotHMopIDNdo47RJ7cAADE+cFkkiGgAkXBQAdC'+
+    'kHPYMx6VasBBDrrHDSJjTVKMJpnprQ6DVdCg4UgFM++Bzw/iQ83v4FMMUeCramaZIQBqGIobriyFvRMgygTQChKM8E5C5B+WgjWtFVZvdgM6YOPQ5ACFAcACo9iW6sxSRXZhUSL8EhbxSqhEeo2JhB8ro/UwKEbtUctTXoti7aaImi+6AgASGAWQtkgZO/rhFXkUxR6v'+
+    '10b5/W1rWDoi9ZKIyBOGwl1jHA4fW0g7hIUtgQ7EV7pC0ZxJwib/k96qEBODWKVGImsxaLySCdf4yEwZ0okC3JcLGUNHG7XPD14AQBdFoS+z3DKXuwzFKCOpSjXeRZHTW6X/2NjEgcERijCSYvhu5xYVhG4AC2iFAXBIGWseBJvaDGMz02jKY6ISiaXs5TJbWcgAhuWZ'+
+    'lJSjJRGIpqBdRgHcRI49u4HPlbUzdfDEDDKVqEzBEXKcsAtoAZs3x2kmUAYO6pknswLR5Uj0oKREZ//0dM5FpjOf1PEnQgU4UVc1FIbU3I4NHEQBkGZlpctpqUgz6tGNCrSjyTSmQZlJ05LGbJ61dAsOHIQBlwJgqMsp6kyJyUh1cvSM6CyAVKV6iJcxKE9+/0DBIcQw'+
+    'incAQIXOZOGDKpm/S6KJBw7yT0nRuhz/cFUUXgUrVaZKVZcO1G6tkAEAKCSKDyBVFB44hK9EkYGKMvWdYl0o/r5HS4ei6ToHAcABnmZUyCJPspQdbCgKK9f22BWnxZKFXg3Lz0NEwUHudOpY5VlWeqLGCaEDgIwAa1TYRna2oQjsaZcTwMGolgZ3nZ8f9BpMXXimYqjd'+
+    'XizjGM2TxtBGQIgtbv0wjJJG97bCAIDFutHbRf02uKMThV4BQITL9AwRsMriYX9rUqA6FjXXvex0q6tQAMSXfrLNbu7ew1TffhaqixQtImJgIT+MgXmKUJYfmKSoV4b1ifFsrjl7UZrA++Jtvka1cH7RFqRWMNiNYNpQYqOxgRbcoAYraIAjJvCCHMSANwDIBENmzAkW'+
+    'uxjGMv5FIAAAOw=='
+    ,
     remindereditor_title: 'data:image/png;base64,' + 
-	'iVBORw0KGgoAAAANSUhEUgAAANIAAAApCAIAAADPruDPAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAdjSURBVHhe7VwNTFZVGA5hn4I/5JbLRUL43zSN1MlyOpNBiqKGYqigU8pFmuW03DSay2KwtMSfUYqkpiLJLBQF'+
-	'IYl0KGJB8WOaqAvTNI0fIVCUrdfdOh7PPffce889H/d+cL+dOfy+933e93nu+517/u7n9v6q5TMioh6jvaqrL1eUlW5KSrh/7x7VwH7TuAJvLFbUH4HvTE3evWur8VjWQejESMXX1z90Snh2XrGPj691MrYzaQcKsMoO0UtOSWsHVG0K1lFAU9l5enoFvjjOOknbmbi6'+
-	'ApSya2m5K2c1IWiSq1N1lfxBf6K5Suba86SU3dRJY0ImjGhsbMBR+vj6awe1LY0oAPpPDgnEWzubT4A4bvKZ7MSgka2trYnrkl8YGYjkg1ltzLxw+G9QcChb02N5R9hmkoH0UkJTAqG+jwAJNKX3pdDNTU319XWVFT/L6RjhCNI1Ntw+e7a86Z9GLcUnn8lK+mvMShcL'+
-	'EESVmhQXv0ajA8eGTAzr1q17D++era33b9fXlZYU/1CQ99eNP/EkqchKanhokQa3eWXGnEGDhyh5wYWUMmaYnT51QupKl62Ig5kyFaq2tqbkxyIC5Ot9O6ngIS+HrVwRCzixS9719n4cAXp5dT2UuZ+dDHxaeCJ/TdxysRwBDQp67Zr3/r51U6/CSvZs5VVZSOo93ccv'+
-	'at4idkqXL1Whstuaut+/b3/CftToMYtil6Xt2Z66bTP6iJ0eoYamKYUo4SSc2VEx8K+7u7tSzekNB73ypxtT9Xoh+zFjJ+QVlHK7KzkOGfr8vozc3r2fEo5MBXQGiy+2p8trDkWfPTdGY98JLoQaJpTd9PBIyENUzUkqPDcsYP7CBx0e9ys+8eEXlxtE7vhhfJJANFUo'+
-	'gSzgy9y330B2RLi9qKaEGyA1TCg7h6Pz2HFBYdNm6cpY1RjuHfgdVtWeMIAbBySm10vVHnoLRoeh6q7XQCCL4JDJqtFB8P4DBqmaIQOkhoCyg1EFapcu/kZNAoYL+PtTps7EL0bVhfPaUxdiCQmfrSwjoIYOC1AC18IRfMEMhqQESL/+g4XkLAfRywIQvL17Ii4EIHq/'+
-	'rq5GssQNzp+rDB4fsCB6OuHFWOJgqKE4pYCxFx6g9T5lbgUGMFDd9vkGVVnPFBc6OjvQJhs+Rwbf1JRNAu8OqsmgnIkhXa9eT1J9NXJEZgezC2GBHUF5enqqpsRhoJeFFGLjZ/EoFkE/L/cwFAr6tGu37nhWFeUPhr9/XPkdpoMwq8XYPWSK27PVoPd2bp06DXx0utrc'+
-	'3MQhDe6Stps+6r958wYcODAIzucO827c0eFw8OEQXi0tLUZwFi9duXTZKrwNDxjFAHQSC7Lf+X9Nh1jcIczkeVLVoJQdfFlz83/Cv6+A1dBQb0RK8D1ekEdFKMg/ahD5+2M5BhEs5R42LYJolkpPSDKUsqOOrJPWf2wwHvSXZ04XykHyv3u4eswXAvpLWEPi87W9TFFA'+
-	'fUoB9/vwqePh0hrPL1/WLcFAQch8QukObjxnDgTivtPc3MwB0m5cqGqolx2sQ+7ae0hJhVmR82GzAbXVHyQw9JLX7sUL54ToC11p0cnjQqDkINo5+j3TD2bo+Igb0K5drXZSYhaHZaihXnbADXSMWbRUiSQs/KLWo4c3Qwt5kVVVCVs6ycnOdN5l0MIRqjNlRwbsJuFp'+
-	'wMqRfKWGnSdMNpM3f4K3X0rPOI+ak5DZatBPoMyJmEhkA5sbxvMjTrUAIHXPmy9Qbc0tPkfnedXU3HrrzWi9+EeyDhzI2Is3vQjWtMfVoJ+3g7sh8Q0jbhzcxIjDfPV1tdxQhKOQMaKoZAAH+rnlb792984dgZiuC0WooXiTJZdnPB5ZPebmT4yvjS8Hokyop1O58zTu'+
-	'CIO8L7/6lr3kZjyKqyAQamga2zG4wWL05qQE1E4WFpgohMAixllo53j9+jViILE2foOJgpgbmqGG0bIDYpnfpOPNRKoGtwcYmWvhCNUZHTl55rSXcBxYdSd2Ak3Upy1Ds9UQUHZtScb6sWBwQuxW+fj0sX7aTspQSQ277JwkuA3LUsAuO7s+TFDALjsTRLdD2mVn14AJ'+
-	'CthlZ4Lodki77OwaMEEBu+xMEN0O2aHLjjjFLvBcQlsWliuyEFB2nbt0wVtbKs4dCxKG5+OJg/uMvbW25Oju7qExnF4WuuS68+jTM+gsCHEohO8Qq9Gyg2NVWTmnUNuTnq2LmynGUs6wT09Ev1J9mZpPG3M8nFuESwp/U38+Qi8LvVITZ3LhxOGw4SPglwCI08JwnEkv'+
-	'MtgbLTuOkNZ0gR0tqx2d4hBKIIty2eN865NSFr6+hMiK73y4XXb/ybhj+xaOy2w1F4EsqM9bEXzP/VpBbEBrFMQuuwdCHc3OzDqYoVEyy5qJZaHlebyEj1bzqdFxyw4mEHAgDJ6Le2fJgnWJa/jkM93LqSzgd8QS4+PkjyIAa+jn5r4aepX36SS3J1jP3Jiuqp2AJRQY'+
-	'MPBZXz9/+KEd6SBTeVmJwd/ts8vOEte1oyXxLxUXoZX9Il/QAAAAAElFTkSuQmCC'
-	,
+    'iVBORw0KGgoAAAANSUhEUgAAANIAAAApCAIAAADPruDPAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAdjSURBVHhe7VwNTFZVGA5hn4I/5JbLRUL43zSN1MlyOpNBiqKGYqigU8pFmuW03DSay2KwtMSfUYqkpiLJLBQF'+
+    'IYl0KGJB8WOaqAvTNI0fIVCUrdfdOh7PPffce889H/d+cL+dOfy+933e93nu+517/u7n9v6q5TMioh6jvaqrL1eUlW5KSrh/7x7VwH7TuAJvLFbUH4HvTE3evWur8VjWQejESMXX1z90Snh2XrGPj691MrYzaQcKsMoO0UtOSWsHVG0K1lFAU9l5enoFvjjOOknbmbi6'+
+    'ApSya2m5K2c1IWiSq1N1lfxBf6K5Suba86SU3dRJY0ImjGhsbMBR+vj6awe1LY0oAPpPDgnEWzubT4A4bvKZ7MSgka2trYnrkl8YGYjkg1ltzLxw+G9QcChb02N5R9hmkoH0UkJTAqG+jwAJNKX3pdDNTU319XWVFT/L6RjhCNI1Ntw+e7a86Z9GLcUnn8lK+mvMShcL'+
+    'EESVmhQXv0ajA8eGTAzr1q17D++era33b9fXlZYU/1CQ99eNP/EkqchKanhokQa3eWXGnEGDhyh5wYWUMmaYnT51QupKl62Ig5kyFaq2tqbkxyIC5Ot9O6ngIS+HrVwRCzixS9719n4cAXp5dT2UuZ+dDHxaeCJ/TdxysRwBDQp67Zr3/r51U6/CSvZs5VVZSOo93ccv'+
+    'at4idkqXL1Whstuaut+/b3/CftToMYtil6Xt2Z66bTP6iJ0eoYamKYUo4SSc2VEx8K+7u7tSzekNB73ypxtT9Xoh+zFjJ+QVlHK7KzkOGfr8vozc3r2fEo5MBXQGiy+2p8trDkWfPTdGY98JLoQaJpTd9PBIyENUzUkqPDcsYP7CBx0e9ys+8eEXlxtE7vhhfJJANFUo'+
+    'gSzgy9y330B2RLi9qKaEGyA1TCg7h6Pz2HFBYdNm6cpY1RjuHfgdVtWeMIAbBySm10vVHnoLRoeh6q7XQCCL4JDJqtFB8P4DBqmaIQOkhoCyg1EFapcu/kZNAoYL+PtTps7EL0bVhfPaUxdiCQmfrSwjoIYOC1AC18IRfMEMhqQESL/+g4XkLAfRywIQvL17Ii4EIHq/'+
+    'rq5GssQNzp+rDB4fsCB6OuHFWOJgqKE4pYCxFx6g9T5lbgUGMFDd9vkGVVnPFBc6OjvQJhs+Rwbf1JRNAu8OqsmgnIkhXa9eT1J9NXJEZgezC2GBHUF5enqqpsRhoJeFFGLjZ/EoFkE/L/cwFAr6tGu37nhWFeUPhr9/XPkdpoMwq8XYPWSK27PVoPd2bp06DXx0utrc'+
+    '3MQhDe6Stps+6r958wYcODAIzucO827c0eFw8OEQXi0tLUZwFi9duXTZKrwNDxjFAHQSC7Lf+X9Nh1jcIczkeVLVoJQdfFlz83/Cv6+A1dBQb0RK8D1ekEdFKMg/ahD5+2M5BhEs5R42LYJolkpPSDKUsqOOrJPWf2wwHvSXZ04XykHyv3u4eswXAvpLWEPi87W9TFFA'+
+    'fUoB9/vwqePh0hrPL1/WLcFAQch8QukObjxnDgTivtPc3MwB0m5cqGqolx2sQ+7ae0hJhVmR82GzAbXVHyQw9JLX7sUL54ToC11p0cnjQqDkINo5+j3TD2bo+Igb0K5drXZSYhaHZaihXnbADXSMWbRUiSQs/KLWo4c3Qwt5kVVVCVs6ycnOdN5l0MIRqjNlRwbsJuFp'+
+    'wMqRfKWGnSdMNpM3f4K3X0rPOI+ak5DZatBPoMyJmEhkA5sbxvMjTrUAIHXPmy9Qbc0tPkfnedXU3HrrzWi9+EeyDhzI2Is3vQjWtMfVoJ+3g7sh8Q0jbhzcxIjDfPV1tdxQhKOQMaKoZAAH+rnlb792984dgZiuC0WooXiTJZdnPB5ZPebmT4yvjS8Hokyop1O58zTu'+
+    'CIO8L7/6lr3kZjyKqyAQamga2zG4wWL05qQE1E4WFpgohMAixllo53j9+jViILE2foOJgpgbmqGG0bIDYpnfpOPNRKoGtwcYmWvhCNUZHTl55rSXcBxYdSd2Ak3Upy1Ds9UQUHZtScb6sWBwQuxW+fj0sX7aTspQSQ277JwkuA3LUsAuO7s+TFDALjsTRLdD2mVn14AJ'+
+    'CthlZ4Lodki77OwaMEEBu+xMEN0O2aHLjjjFLvBcQlsWliuyEFB2nbt0wVtbKs4dCxKG5+OJg/uMvbW25Oju7qExnF4WuuS68+jTM+gsCHEohO8Qq9Gyg2NVWTmnUNuTnq2LmynGUs6wT09Ev1J9mZpPG3M8nFuESwp/U38+Qi8LvVITZ3LhxOGw4SPglwCI08JwnEkv'+
+    'MtgbLTuOkNZ0gR0tqx2d4hBKIIty2eN865NSFr6+hMiK73y4XXb/ybhj+xaOy2w1F4EsqM9bEXzP/VpBbEBrFMQuuwdCHc3OzDqYoVEyy5qJZaHlebyEj1bzqdFxyw4mEHAgDJ6Le2fJgnWJa/jkM93LqSzgd8QS4+PkjyIAa+jn5r4aepX36SS3J1jP3Jiuqp2AJRQY'+
+    'MPBZXz9/+KEd6SBTeVmJwd/ts8vOEte1oyXxLxUXoZX9Il/QAAAAAElFTkSuQmCC'
+    ,
     info_icon: 'data:image/png;base64,' +
     'iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAABKZJREFUSImdll1oHFUUx3/3zp2Z3Wyaj23SbNI2S02rrU1t+oUUjBYRqgj6UKHgx4NWCpZqEVTEBxV8UhFUKGJb0CIVK1ifKj4pioKVftivB61JWzHZZNPsJruT3dmZnbk+'+
     'zG6yaVJBDxzuzNxz/v9zz7nn3hH8i2itASSgAKs2CsBv0FAIcUuMRWdqwAaQKJS87h8ujWwplPyNQoplIvLJtsTNC/fc2X26NWFnAAcIFiNa8KUGbp8fnkh/+dOVfU0x+7GVnS09cdMSShlR+EFAqeLpv28URl3PP7Fr+20fDfQtuwq4N5OIm8HDMIy9dOTHBwtu8MGm'+
@@ -17920,22 +17968,25 @@ global.resource = {
     'QgAgWnOlpdBbPYldhw59YRLN/zwz847yR/ctPOYIWNWAAKqLUeMdljCIUbm36GMZMQ/myv8sHajERKU+LG1samO1To+KAomQ+JqoObWOVREqAxQkUUd0w9QuYk2pD6BcRyhYwwCkFVKgoiFC3unhVBBTWx/2vhzyXH3rEWAATMwczr+e83Ba9G+1Xk8Bq9BqoLBUa4GZ'+
     '+V/8vLMP/1VGiAAAAABJRU5ErkJggg=='
     ,
-    thief_icon: 'data:image/png;base64,' +
-	'iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQA'+
-	'AA7EAZUrDhsAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADw0lEQVQ4T61UW2gcZRT+NnubvWeSza7ZuNkk'+
-	'5lJC1fSW2IhoKilWaSu0rFKjTYjFK7boU/RBJH318uCbQhvJQ00RFNIKFjTFB6FRg6aNpRQ2981esvfszOzu7O+Zqdiuu1lBPDDM'+
-	'z/nP/53vXDWMBP+zaKqBJpMprK+vY3VlBVqtFop3r9cLj8cDq9WyLZVtQT/56GN8eeECghtB8LU8dDo98vk8Eok4Ojs7MTw8jBMv'+
-	'DlUErgj6ysunMD09jZa2VviaW1HndMLusCGVSiMWiWBpcRErS0t47c03MPbeu2XAZaCz12bxWH+/GiZnMkFPDI2cETq9AQViKkkS'+
-	'cpIAQZAQDocQoNQ4nfUlwCqoUiuNRoNodBPP+/1YJhY2ux0Gg0ENu6amBmRw5yHZKuD5XA6JZAI9PT0498UELJa7OdYpdop3juNw'+
-	'cWoKgcAiWlp8MJvMxNSIet4OC91xnAG5XB6pLQGpdBaiKMLO87h+YwHzv1/HI/v7/marghYKsqoIR6LY0VSL4GYMIWkNhZyEB7wN'+
-	'cPJW2MwcUpksloObiKVFaPUc6YzY0dwIDXXGvaKGXygUKEwVH2+NnsTkxW9w6Jmnsa+3F5cvXcb8/DzdaIi9CYePHqFuqMWVK9/h'+
-	't7k5TE6ex9Fj/tJi/ZVT9SeJOTb45CDbt3sPi8UTqu77H2aYt9HD3PUNbHDgAJOLd15cnbnK9NCw8Q/G74VQz1SBu1JkMoqyrLLe'+
-	'jEZxiVi+c/oMRCmPvbsfxOzPv+KlF4aw8MdNFBXuVDyZ7Mvkn25ODZ1g9byTtXh9zGHjWZv3fnbuwzHGkjfYmdHnmKvOye5zNbLm'+
-	'Ji+zmm3s/OefVWeqeBxot6DN7QBv43DySD8mxkfw7OM7sbUawNjoU5g4O4K+nT7wdhN6fLXo7XBXb35ltr96fwRWTRLNXd3gbA7U'+
-	'UCq+/XEBwVgGB/d3otHpgLZYQCYRw61fZtF66HXsOnisBLgkp0p7863dWFsNIhSNU3OnIIgSHuryoKnBijqbGaIgIhpPYiMcV5eN'+
-	'u+PhMqYloMpt94HjSISC2KJpkbICFUmkVBgxsLeDilKgAZBIn0UqEgLHN8Hpa/93UDctkD3+0wgFbiMRi0JMZZClL51OQ9hSzrRU'+
-	'wht0F8MTr56FoYwWdUWlfSrmZVyb+hRLP30N3uWCkeZaXX0070KGgDMidvnfRlffAI1EuWy7T5U+jKwtY3VuBlI6CjknwGjlYXS4'+
-	'0P7oYZouY0VAxUXVza8YKB0hkwdWlKHVaVEh2uotVSGS/6T6E34r8Bxbs8hzAAAAAElFTkSuQmCC'
-};
+    thief_icon: 'data:image/png;base64,'+
+    'iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A'+
+    '/wD/oL2nkwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAAd0SU1FB9sIDAsiMq27SnQAAAN8SURBVDjL'+
+    '3dRfTFt1FAfwb3tv29vSP7vQlpZ6W6i2IGGbwlwGRiMsxT0tmjg2t0mIqEOngpqYTI2C+LqxRxaN'+
+    '88HE/YvZA/PRQUycbv5LdMwYtdR2lP7httyW3j/t5fjq0Fhn4ovn8ZeTz+/k5JsD/AdlqNewuHjj'+
+    'dCqZdDEMkyWgJAhCub09OvWv0JnjJ+jsmTN6eiWd5bfwDMua9Gq1KheLBT0ajYZHRkaYQ8NPGP4x'+
+    '+szoUzQ3N4fWcBtCwTY0ut1wuhyQpBLEXA6JpSUkEwk8+/xR/bU3Xmfrole/vMo80NdXEwQBnNUK'+
+    'E2uChbOANZlRq1ahqio0VYYsq8hmM9/Hk8lHPB73r380bvkll8vvPDA0tD0YCsHhdMJsNoNlTTAa'+
+    'jYDBADPDwGyxoFa1wmbTwLDM1ueOHPll83C3oOfPnZuOx5cGW1tDsFlt4KwWNPFONHAcOM4MTatC'+
+    'WpchlSpQFAVOnscP1xdx5fMvZnv7do39JZrN5Qc7AluQXhWRUW+ipqm4U/DAzdvhsHGQyhX8ll6F'+
+    'WFLAmDg4bBZ0BP0wMMyrfxuhF54cJt7hooMHHqeZEzMU2x0jn9dHPq+fwqEwjb84QZNvTtL9vX1k'+
+    '56x08cLZ2brBje2O0X3dPSQWikRE9OnleRL8LdTc5KFY/wDpG0RERAvzC2SCgaanppc3G8bNDxu6'+
+    'DpZlsZrP49KlT/DK+AQUtYod3Vtx7atvMHzoMBZv/IgNAAaDAbqu++tO+vThg9TEu6lVCJHLwVNY'+
+    'uINOHz9GtHadJkb3k7fRTT6vn4IBgew2B33w3ru02fhTcPvvasB3zS7UjCz2PtiFfbFudHV1YD0V'+
+    'x7HRPXi4J4jZC59hKS0i6AR2RppRFzVtVPH2/m0ItneCc7hgZFl89PFlpMUyBnujiIR8OPnSoygX'+
+    'Rfz09TUoivZ+3Z3ybZ24mUojky+guCZBVlRsa29BwGNHo8MGRVaQL6xhJVvA8vIymiPbj9ZFOwce'+
+    'myxm0lhfK0KtyFBUBbzDgv4dEeh6DZqmQq1UIOUy4PgAAuGIUhdtCYWneobGkYn/jKKYhyKVUZHK'+
+    'KJVKkNfLqEgliNkVFEURD429c+q2Tt/ChycpceUieK8XloYGsKwJVU2DXC6jUlZw79DLp+7eNTB2'+
+    '20d6JZV4K/Xt/KRaykPXZFjsPCwuL+6J7TPgf1G/A/HlfFWAgYziAAAAAElFTkSuQmCC'
+    };
 
 }
